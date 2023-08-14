@@ -12,35 +12,53 @@
     </div>
 </section>
 
+@if(isset($cart_data) && count($cart_data)>0)
 <section class="order-form">
     <div class="container">
         <div class="row">
             <div class="col-md-10 offset-md-1">
                 <h2>SİFARİŞ FORMU</h2>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="fullName" placeholder="">
+                    <input type="text" class="form-control" id="fullName" placeholder="" maxlength="35" required>
                     <label for="fullName">Ad Soyad</label>
+                    <div class="invalid-feedback">
+                        Zəhmət olmasa ad soyad daxil edin.
+                    </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="number" class="form-control" id="number" placeholder="">
+                    <input type="number" class="form-control" id="number" placeholder="" maxlength="25" required>
                     <label for="number">Əlaqə nömrəsi</label>
+                    <div class="invalid-feedback">
+                        Zəhmət olmasa əlaqə nömrəsi daxil edin.
+                    </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="email" class="form-control" id="floatingInput" placeholder="">
-                    <label for="floatingInput">Email</label>
+                    <input type="email" class="form-control" id="mail" placeholder="" maxlength="45" required>
+                    <label for="mail">Email</label>
+                    <div class="invalid-feedback">
+                        Zəhmət olmasa email daxil edin.
+                    </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" id="address" placeholder="">
+                    <input type="text" class="form-control" id="address" placeholder="" maxlength="120" required>
                     <label for="address">Ünvan</label>
+                    <div class="invalid-feedback">
+                        Zəhmət olmasa ünvan daxil edin.
+                    </div>
                 </div>
                 <div class="form-floating">
-                    <textarea class="form-control" placeholder="Qeyd əlavə edin" id="floatingTextarea2" style="height: 100px"></textarea>
-                    <label for="floatingTextarea2">Qeyd</label>
+                    <textarea class="form-control" placeholder="Qeyd əlavə edin" id="note" 
+                        style="height: 100px" maxlength="335" required></textarea>
+                    <label for="note">Qeyd</label>
+                    <div class="invalid-feedback">
+                        Zəhmət olmasa qeyd daxil edin.
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+@endif
 
 <section class="section">
     <div class="container">
@@ -147,6 +165,40 @@
 
     <script>
         $(document).ready(function () {
+
+            $('.order-selected-products').click(function (e) { 
+
+                var data = {
+                    fullName: "",
+                    number: "",
+                    mail: "",
+                    address: "",
+                    note: ""
+                }
+
+                var isValid = true;
+
+                $(".form-floating").each(function(){
+                    const inpTag = $(this).find(".form-control");
+                    
+                    if(inpTag.val().length>0) {
+                        data[inpTag.attr("id")] = inpTag.val();
+                        $(this).find(".invalid-feedback").removeClass("error-warning");
+                    } else {
+                        isValid = false;
+                        $(this).find(".invalid-feedback").addClass("error-warning");
+                    }
+                })
+
+                // console.log(data)
+
+                if(isValid) {
+                    //call api with ajax
+
+                    window.location.href="/success-order";
+                }
+
+            });
 
             $('.cartpage .delete-cart-data').click(function (e) { 
 

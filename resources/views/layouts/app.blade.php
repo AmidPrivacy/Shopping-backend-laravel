@@ -302,7 +302,7 @@
                                             <img class="img-fluid" src="/uploads/products/${item.item_image}" alt="...">
                                         </div>
                                         <div class="basket-product-info">
-                                            <h6>${item.item_name}</h6>
+                                            <h6><a href="/product/${item.item_id}" target="_blank">${item.item_name}</a></h6>
                                             <div class="product-meta">
                                                 <span class="mr-2 text-primary">${item.item_price}AZN</span> x <span class="text-muted">${item.item_quantity}</span>
                                             </div>

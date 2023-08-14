@@ -122,7 +122,7 @@
 
                         <div class="card-body">
                             <div class="product-info">
-                                <a href="#">{{ $product->name }}</a>
+                                <a href="/product/{{ $product->uuid }}">{{ $product->name }}</a>
                             </div>
                             <div class="intro">
                                 <span class="last-price">

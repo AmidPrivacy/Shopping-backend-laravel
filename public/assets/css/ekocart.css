@@ -943,6 +943,11 @@ input[type=number] {
     font-size: 12px;
 }
 
+#offcanvasRight .basket-product-info h6 a {
+    color: black;
+    text-decoration: unset;
+}
+
 .cart-shopping-total {
     margin-top: 40px;
 }
@@ -972,4 +977,8 @@ input[type=number] {
     text-align: center;
     /* color: #fff; */
     margin-bottom: 35px;
+}
+
+.order-form .error-warning { 
+    display: block !important;
 }
