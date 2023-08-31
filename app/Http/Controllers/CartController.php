@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request; 
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Products; 
-use App\Models\SubCategories; 
+use App\Models\Products;
+use App\Models\SubCategories;
 use App\Models\ProductImages;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
@@ -15,14 +15,14 @@ class CartController extends Controller
 
     public function index()
     {
- 
+
         $cart_data = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', Cookie::get('shopping_cart')), true );
 
         $menus = DB::select("select id, name from menus where is_deleted=0");
 
-        foreach($menus as $menu) { 
+        foreach($menus as $menu) {
             $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
-            foreach($categories as $category) { 
+            foreach($categories as $category) {
                 $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
             }
             $menu->categories = $categories;
@@ -32,7 +32,7 @@ class CartController extends Controller
         return view('cart')->with(['cart_data' => $cart_data, "menus"=>$menus]);
     }
 
-     
+
     public function addtocart(Request $request)
     {
 
@@ -68,8 +68,8 @@ class CartController extends Controller
                 }
             }
 
-        } else { 
- 
+        } else {
+
             $product = Products::where('uuid', $prod_id)->first();
 
             $images = DB::select("select id, name from product_images where product_id=? and is_deleted=0", [$product->id]);
@@ -124,7 +124,7 @@ class CartController extends Controller
             return;
         }
     }
- 
+
     public function deletefromcart(Request $request)
     {
         $prod_id = $request->input('product_id');
@@ -159,13 +159,13 @@ class CartController extends Controller
 
     public function successOrder()
     {
-        $this->clearcart();
+        //$this->clearcart();
 
         $menus = DB::select("select id, name from menus where is_deleted=0");
 
-        foreach($menus as $menu) { 
+        foreach($menus as $menu) {
             $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
-            foreach($categories as $category) { 
+            foreach($categories as $category) {
                 $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
             }
             $menu->categories = $categories;
@@ -175,5 +175,5 @@ class CartController extends Controller
         return view('success-order')->with(["menus"=>$menus]);
     }
 
- 
+
 }

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content') 
+@section('content')
     <!-- SECTION  -->
     <section class="home-page">
         <div class="custom-container d-flex " style="justify-content: space-around;margin-left:5%">
@@ -68,7 +68,7 @@
 
                                 </h4>
 
-                            </span> 
+                            </span>
 
                             <ul>
                                 <!-- <li>Availibility: <span>In Stock</span> </li> -->
@@ -85,26 +85,26 @@
                     </div>
 
                     <div class="align-items">
-                        <div class="product-num"> 
+                        <div class="product-num">
                             <i class="fa-solid fa-minus iconplus"></i>
                             @csrf
                             <input type="hidden" class="product-id" value="{{ $data->uuid }}">
                             <input type="number" id="product-count" name="product" value="1">
-                            <i class="fa-solid fa-plus iconminus"></i>  
+                            <i class="fa-solid fa-plus iconminus"></i>
                         </div>
                         <div class="cart-action-box">
-                            <button><i class="fa-solid fa-cart-shopping"></i>Səbətə at</button>    
-                        </div> 
+                            <button><i class="fa-solid fa-cart-shopping"></i>Səbətə at</button>
+                        </div>
 
                     </div>
-  
+
                 </div>
 
             </div>
 
         </div>
 
-    </section> 
+    </section>
 
 
     <!-- SECTION TABLE -->
@@ -129,21 +129,21 @@
                         <table>
                           @foreach($data->specifications as $sp)
                             <tr>
-                              <td>{{ $sp->name }}</td> 
-                              <td>{{ $sp->value }}</td> 
+                              <td>{{ $sp->name }}</td>
+                              <td>{{ $sp->value }}</td>
                             </tr>
                           @endforeach
 
                           @foreach($data->values as $value)
                             <tr>
-                              <td>{{ $value->type }}</td> 
-                              <td>{{ $value->name }}</td> 
+                              <td>{{ $value->type }}</td>
+                              <td>{{ $value->name }}</td>
                             </tr>
                           @endforeach
-                        </table> 
+                        </table>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"></div> 
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab"></div>
             </div>
         </div>
     </section>
@@ -159,7 +159,7 @@
             </div>
 
 
-            <!-- Slider -->  
+            <!-- Slider -->
             <div class="addition-offers owl-carousel owl-theme">
                 @foreach($data->others as $other)
                     @if(count($other->images)>0)
@@ -170,19 +170,19 @@
                             <p>{{ $other->price }} AZN</p>
                         </a>
                     </div>
-                    @endif 
-                @endforeach 
-            </div> 
+                    @endif
+                @endforeach
+            </div>
 
         </div>
-    </section> 
- 
-    
-  
-    
+    </section>
+
+
+
+
 @endsection
 
-@section('js') 
+@section('js')
     <script src="../assets/js/owl.carousel.min.js"></script>
     <script>
         $( document ).ready(function() {
@@ -205,11 +205,11 @@
 
                 let currentValue = $(".product-num #product-count").val();
                 $(".product-num #product-count").val(Number(currentValue)+1);
-         
+
             });
 
             $('.cart-action-box button').click(function (e) {
-       
+
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -227,7 +227,7 @@
                         'product_id': product_id,
                     },
                     success: function (response) {
-                        loadCartCount(); 
+                        loadCartCount();
                     },
                 });
             });
@@ -249,7 +249,7 @@
                         nav:true,
                     },
                     1000:{
-                        items: 3, 
+                        items: 3,
                         nav: true,
                         // navText: [&#x27;next&#x27;,&#x27;prev&#x27;]
                     }
@@ -257,6 +257,6 @@
             })
         });
 
-       
-    </script> 
+
+    </script>
 @endsection
