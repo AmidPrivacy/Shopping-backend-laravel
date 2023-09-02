@@ -33,6 +33,22 @@ class CategoryController extends Controller
 
     }
 
+    public function getById($id, Request $request) {
+     
+        if(filter_var($request->isParent, FILTER_VALIDATE_BOOLEAN)){
+            $category = Categories::find($id);
+        } else {
+            $category = SubCategories::find($id);
+        }
+        
+    
+        return response()->json([
+            'data' => $category,
+            'error' => null,
+        ]);
+    
+    }
+
     public function getSubCategories() { 
 
         $datas = DB::select("select id, name from sub_categories where is_deleted=0"); 
@@ -90,7 +106,7 @@ class CategoryController extends Controller
             }
            
         }
-
+ 
         else {
             $response["status"] = 500;
             $response["message"] = "Failed! image(s) not uploaded";
@@ -142,11 +158,16 @@ class CategoryController extends Controller
     } 
 
     public function add(Request $request) {
-
-        $category = new Categories;
+ 
+        if($request->rowId) {
+            $category = Categories::find($request->rowId);
+        } else {
+            $category = new Categories; 
+            $category->uuid = (string) Str::uuid();
+        }
 
         $category->name = $request->name;
-        $category->uuid = (string) Str::uuid();
+        
        
         if($category->save()){
 
@@ -166,10 +187,16 @@ class CategoryController extends Controller
 
     public function addSubCategory(Request $request) {
 
-        $category = new SubCategories;
+        if($request->rowId) {
+            $category = SubCategories::find($request->rowId);
+        } else {
+            $category = new SubCategories; 
+            $category->uuid = (string) Str::uuid();
+            $category->category_id = $request->parentId; 
+        }
+ 
         $category->name = $request->name;
-        $category->category_id = $request->id;
-        $category->uuid = (string) Str::uuid();
+        
        
         if($category->save()){
 

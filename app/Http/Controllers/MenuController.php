@@ -53,9 +53,15 @@ class MenuController extends Controller
   
     public function add(Request $request) {
 
-        $menu = new Menus;
+        if($request->id) {
+            $menu = Menus::find($request->id);
+        } else {
+            $menu = new Menus;
+            $menu->uuid = (string) Str::uuid();
+        }
+        
         $menu->name = $request->name; 
-        $menu->uuid = (string) Str::uuid();
+        
         
         if($menu->save()) { 
             return response()->json([

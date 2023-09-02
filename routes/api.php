@@ -83,6 +83,7 @@ use App\Http\Controllers\OrderController;
     //Value apis
     $router->get('/menus', [MenuController::class, 'list']);
     $router->post('/menu', [MenuController::class, 'add']);
+    $router->get('/menu/{id}', [MenuController::class, 'getById']);
     $router->put('/menu-status', [MenuController::class, 'setStatus']);
 
 

@@ -64,13 +64,7 @@
                 </div>
 
                 <!-- search bootstrap -->
-                <form class="search" role="search">
-                    <!-- <select class="form-select" aria-label="Default select example">
-                        <option selected>Bütün kateqoriyalar</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select> -->
+                <form class="search" role="search"> 
                     <input type="search" placeholder="Axtar..." aria-label="Search">
                     <button class="btn" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -111,17 +105,8 @@
                             
                         </ul>
                     </nav>
-
-
-                    <div class="navbar-icons">
-                        <a href="#">
-                            <i class="fa-regular fa-user"></i>
-                        </a>
-
-                        <a href="#">
-                            <i class="fa-regular fa-heart"></i>
-                        </a>
-
+ 
+                    <div class="navbar-icons">  
                         <a href="#" class="card-shopping-details" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
                             <span class="notification" notification="0"></span>
                             <i class="fa-solid fa-cart-shopping"></i>
