@@ -23,8 +23,8 @@ class ProductController extends Controller
             p.star, p.created_at from products p inner join sub_categories c on p.category_id=c.id where p.is_deleted=0 order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]); 
 
         foreach($datas as $data) { 
-            $data->companies = DB::select("select r.id, c.name from product_company_relations r 
-            inner join companies c on r.company_id=c.id where r.product_id=? and r.is_deleted=0", [$data->id]); 
+            $data->companies = DB::select("select r.id, c.name, r.price as price, r.percentage as percentage from 
+                product_company_relations r inner join companies c on r.company_id=c.id where r.product_id=? and r.is_deleted=0", [$data->id]); 
         }
 
         foreach($datas as $data) { 

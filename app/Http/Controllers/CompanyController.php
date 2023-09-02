@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB; 
 use Illuminate\Support\Facades\Validator;
 use  App\Models\Companies; 
+use  App\Models\Products; 
 use  App\Models\Rows; 
 use  App\Models\CategoryCompanyRelations; 
 use  App\Models\ProductCompanyRelations; 
@@ -157,18 +158,25 @@ class CompanyController extends Controller
 
     public function addRelation(Request $request) {
 
-        $relations = [];
-        foreach ($request->companies as $item)
-        {     
-            array_push($relations, [ 
-                'product_id' => $request->rowId,
-                'company_id' => $item
-            ]);
-        }
-        
-        $inserted = DB::table('product_company_relations')->insert($relations);
+        $product = Products::find($request->rowId);
 
-        if($inserted) {  
+        $row = new ProductCompanyRelations();
+ 
+        $row->product_id = $request->rowId;
+        $row->company_id = $request->companyId;
+
+        if(filter_var($request->isPrice, FILTER_VALIDATE_BOOLEAN)) {
+            $price = $request->value;
+            $percentage =  $product->price !==0 ?  (100 - ($request->value*100/$product->price)) : 0;
+        } else {
+            $percentage = $request->value;
+            $price = $product->price !==0 ?  ($product->price - ($request->value*$product->price/100)) : 0;
+        }
+
+        $row->percentage = $percentage;
+        $row->price = $price;
+       
+        if($row->save()) {  
             return response()->json([
                 'data' => ["message"=>"Firmalar əlavə olundu"],
                 'error' => null,
