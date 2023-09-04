@@ -14,6 +14,7 @@ use App\Http\Controllers\CenterController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ScraperController;
 
 /*
 |--------------------------------------------------------------------------
@@ -145,3 +146,7 @@ use App\Http\Controllers\OrderController;
     $router->get('/orders', [OrderController::class, 'list']);
     $router->get('/order/{id}', [OrderController::class, 'getById']);
     $router->put('/order-status', [OrderController::class, 'setStatus']);
+
+
+
+    $router->post('/scraper', ScraperController::class);
