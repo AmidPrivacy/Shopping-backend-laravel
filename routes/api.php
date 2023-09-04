@@ -54,7 +54,7 @@ use App\Http\Controllers\OrderController;
 
 
     //Product apis
-    $router->get('/products', [ProductController::class, 'list']);
+    $router->get('/products', [ProductController::class, 'list']); 
     $router->get('/product/{id}', [ProductController::class, 'getById']);
     $router->post('/product', [ProductController::class, 'add']);
     $router->put('/product/{id}', [ProductController::class, 'update']);
@@ -63,6 +63,8 @@ use App\Http\Controllers\OrderController;
     $router->post('/product-image', [ProductController::class, 'upload']);
     $router->get('/product-images/{id}', [ProductController::class, 'imageList']);
     $router->delete('/product-image/{id}', [ProductController::class, 'deleteImage']);
+
+    $router->get('/replace-category', [ProductController::class, 'replaceCategory']);
 
 
 

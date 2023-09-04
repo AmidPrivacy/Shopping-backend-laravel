@@ -17,10 +17,10 @@ class ProductController extends Controller
         $limit = isset($request->limit) ? $request->limit : 10; 
         $offset = isset($request->offset) ? $request->offset*10 : 0; 
 
-        $allProducts = DB::select("select p.id from products p inner join sub_categories c on p.category_id=c.id where p.is_deleted=0");
+        $allProducts = DB::select("select p.id from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0");
         
         $datas = DB::select("select p.id, p.name, p.isFront, p.description, p.price, p.discount, c.name as category, p.warranty, 
-            p.star, p.created_at from products p inner join sub_categories c on p.category_id=c.id where p.is_deleted=0 order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]); 
+            p.star, p.created_at from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0 order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]); 
 
         foreach($datas as $data) { 
             $data->companies = DB::select("select r.id, c.name, r.price as price, r.percentage as percentage from 
@@ -61,7 +61,7 @@ class ProductController extends Controller
  
         $productInfo = Products::find($id);
 
-        $productInfo->parentCategory = (SubCategories::find($productInfo->category_id))->category_id;
+        // $productInfo->parentCategory = (SubCategories::find($productInfo->category_id))->category_id;
        
         $productInfo->specifications = DB::select("select s.id, s.name, p.value from product_specification_relations p 
         inner join specifications s on p.specification_id=s.id where p.product_id=? and p.is_deleted=0", [$id]); 
@@ -132,6 +132,7 @@ class ProductController extends Controller
         $product->price = $request->price;  
         $product->discount = $request->discount;  
         $product->category_id = $request->categoryId;   
+        $product->parent_category_id = $request->parentCategoryId;   
         $product->warranty = $request->warranty;  
         $product->uuid = (string) Str::uuid();
  
@@ -190,6 +191,23 @@ class ProductController extends Controller
         }
     }
 
+    public function replaceCategory() {
+        $products = DB::select("select id, parent_category_id as pCategory, category_id as categoryId from products where parent_category_id is null and category_id is not null and is_deleted=0");
+        
+        foreach ($products as $product)
+        { 
+            $cat = SubCategories::find($product->categoryId);
+            
+
+            $pr = Products::find($product->id);
+            $pr->parent_category_id = $cat->category_id;
+            $pr->save();
+            // dd($product->id);
+        }
+
+        echo "end....";
+        // dd($products);
+    }
 
     public function update($id, Request $request) {
 
