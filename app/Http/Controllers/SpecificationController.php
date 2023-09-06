@@ -17,14 +17,26 @@ class SpecificationController extends Controller
             $paging = " LIMIT ".$request->limit." OFFSET ".$request->offset*10;
         } 
 
-        $all = $datas = DB::select("select s.id from specifications s inner join sub_categories c on s.category_id=c.id where s.is_deleted=0"); 
+        $all = $datas = DB::select("select s.id from specifications s where s.is_deleted=0"); 
 
-        $datas = DB::select("select s.id, s.name, c.name as category from specifications s inner join sub_categories c 
-                            on s.category_id=c.id where s.is_deleted=0".$paging); 
+        $datas = DB::select("select s.id, s.name from specifications s where s.is_deleted=0".$paging); 
   
 
         return response()->json([
             'data' => ["specifications"=>$datas, "totalCount"=>count($all)],
+            'error' => null,
+        ]);
+
+    }
+
+
+    public function searchSpecification(Request $request) {
+
+        $datas = DB::select("select id, name from specifications  
+        where is_deleted=0 and name LIKE '".$request->name."%' LIMIT 100 OFFSET 0"); 
+  
+        return response()->json([
+            'data' => $datas,
             'error' => null,
         ]);
 

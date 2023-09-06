@@ -104,6 +104,8 @@ use App\Http\Controllers\ScraperController;
 
     //Specification apis
     $router->get('/specifications', [SpecificationController::class, 'list']);
+    
+    $router->get('/search-sp', [SpecificationController::class, 'searchSpecification']);
     $router->get('/specification/{id}', [SpecificationController::class, 'getById']);
     $router->get('/sp-category/{id}', [SpecificationController::class, 'getByCategoryId']);
     $router->post('/specification', [SpecificationController::class, 'add']);
