@@ -12,17 +12,19 @@ class HomeController extends Controller
 {
      
     public function index() { 
-
-        // dd(Cookie::get('shopping_cart'));
-
-
-        $menus = DB::select("select id, name from menus where is_deleted=0");
+ 
+        $menus = DB::select("select id, name, is_product, uuid from menus where is_deleted=0");
 
         foreach($menus as $menu) { 
-            $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
-            foreach($categories as $category) { 
-                $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+            if($menu->is_product===0) {
+                $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
+                foreach($categories as $category) { 
+                    $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+                }
+            } else {
+                $categories = [];
             }
+            
             $menu->categories = $categories;
         }
 
@@ -33,22 +35,19 @@ class HomeController extends Controller
         foreach($products as $product) { 
             $product->images = DB::select("select name from product_images where product_id=? and is_deleted=0", [$product->id]);
         }
-
-        // dd((string) Str::uuid());
-        // dd($products);
+ 
         return view('home')->with(['data'=>[], "menus"=>$menus, "centers"=>$centers, "products"=>$products]); 
 
     }
 
 
     public function getById($id)
-    { 
-        // $productInfo = Products::find($id);
+    {  
 
         $datas = DB::select("select p.id, p.uuid, p.name, p.description, p.price, p.discount, c.name as categoryName, c.uuid as categoryId, p.warranty, 
-            p.star, p.created_at from products p inner join sub_categories c on p.category_id=c.id where p.is_deleted=0 and p.uuid=? order by p.id desc", [$id]); 
+            p.star, p.created_at from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0 and p.uuid=? order by p.id desc", [$id]); 
 
-         
+        // dd($datas);
         foreach($datas as $data) {  
             $data->specifications = DB::select("select p.id, s.name, p.value from product_specification_relations p 
             inner join specifications s on p.specification_id=s.id where p.product_id=? and p.is_deleted=0", [$data->id]); 
@@ -98,20 +97,64 @@ class HomeController extends Controller
         }
         
 
-        $menus = DB::select("select id, name from menus where is_deleted=0");
+        $menus = DB::select("select id, name, is_product, uuid from menus where is_deleted=0");
 
         foreach($menus as $menu) { 
-            $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
-            foreach($categories as $category) { 
-                $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+            if($menu->is_product===0) {
+                $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
+                foreach($categories as $category) { 
+                    $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+                }
+            } else {
+                $categories = [];
             }
             $menu->categories = $categories;
         }
-
-        // dd($productInfo);
-        // dd(Cookie::get('shopping_cart'));
+ 
         return view('product')->with(['data'=>$productInfo, "menus"=>$menus]); 
     }
+
+    public function getProductsByMenuId($id, Request $request)
+    {  
+        $menuInfo = DB::select("select id, name from menus where uuid like '".$id."'"); 
+        
+        if(count($menuInfo)===0) {
+            return redirect("/");
+        }
+    
+
+        $paging = " LIMIT ".($request->limit??10)." OFFSET ".($request->offset??0)*10;
+
+ 
+        $all = DB::select("select p.id from menus m inner join products p on m.id=p.menu_id 
+                                                                where p.is_deleted=0 and m.uuid like '".$id."'");
+
+        $products = DB::select("select p.id, p.name, p.price, p.discount, p.star, p.uuid from menus m 
+                    inner join products p on m.id=p.menu_id where p.is_deleted=0 and m.uuid like '".$id."'"); 
+
+        foreach($products as $product) { 
+            $product->images = DB::select("select name from product_images where product_id=? 
+                                            and is_deleted=0", [$product->id]);
+        }
+
+        // dd($products);
+        $menus = DB::select("select id, name, is_product, uuid from menus where is_deleted=0");
+        foreach($menus as $menu) { 
+            if($menu->is_product===0) {
+                $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
+                foreach($categories as $category) { 
+                    $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+                }
+            } else {
+                $categories = [];
+            }
+            $menu->categories = $categories;
+        } 
+
+      
+        return view('categories')->with(['category'=>$menuInfo, "menus"=>$menus, "products"=>$products, 
+                    "isParent"=>false, "currentPage" =>($request->offset??0+1), "totalCount"=>count($all)]);  
+    } 
 
     public function categories($id, Request $request)
     {  
@@ -137,11 +180,15 @@ class HomeController extends Controller
         }
 
  
-        $menus = DB::select("select id, name from menus where is_deleted=0");
+        $menus = DB::select("select id, name, is_product, uuid from menus where is_deleted=0");
         foreach($menus as $menu) { 
-            $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
-            foreach($categories as $category) { 
-                $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+            if($menu->is_product===0) {
+                $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
+                foreach($categories as $category) { 
+                    $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+                }
+            } else {
+                $categories = [];
             }
             $menu->categories = $categories;
         } 
@@ -181,11 +228,15 @@ class HomeController extends Controller
         }
 
  
-        $menus = DB::select("select id, name from menus where is_deleted=0");
+        $menus = DB::select("select id, name, is_product, uuid from menus where is_deleted=0");
         foreach($menus as $menu) { 
-            $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
-            foreach($categories as $category) { 
-                $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+            if($menu->is_product===0) {
+                $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
+                foreach($categories as $category) { 
+                    $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+                }
+            } else {
+                $categories = [];
             }
             $menu->categories = $categories;
         } 

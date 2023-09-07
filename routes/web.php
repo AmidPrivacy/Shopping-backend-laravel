@@ -20,6 +20,7 @@ Route::get('/', [HomeController::class, 'index']);
 
 
 Route::get('/product/{id}', [HomeController::class, 'getById']);
+Route::get('/special-products/{id}', [HomeController::class, 'getProductsByMenuId']);
 Route::get('/sub-categories/{id}', [HomeController::class, 'categories']);
 Route::get('/categories/{id}', [HomeController::class, 'parentCategories']);
 Route::post('/product-filter', [HomeController::class, 'productFilter']);

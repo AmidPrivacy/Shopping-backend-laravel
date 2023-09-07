@@ -60,6 +60,7 @@ use App\Http\Controllers\ScraperController;
     $router->post('/product', [ProductController::class, 'add']);
     $router->put('/product/{id}', [ProductController::class, 'update']);
     $router->put('/product-status', [ProductController::class, 'setStatus']);
+    $router->put('/product-menu', [ProductController::class, 'AddMenu']);
     $router->put('/product-home-status', [ProductController::class, 'setHomeStatus']);
     $router->post('/product-image', [ProductController::class, 'upload']);
     $router->get('/product-images/{id}', [ProductController::class, 'imageList']);

@@ -19,8 +19,9 @@ class ProductController extends Controller
 
         $allProducts = DB::select("select p.id from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0");
         
-        $datas = DB::select("select p.id, p.name, p.isFront, p.description, p.price, p.discount, c.name as category, p.warranty, 
-            p.star, p.created_at from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0 order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]); 
+        $datas = DB::select("select p.id, p.name, p.isFront, m.name as menu, p.description, p.price, p.discount, c.name as category, p.warranty, 
+            p.star, p.created_at from products p left join sub_categories c on p.category_id=c.id left join menus m on p.menu_id=m.id
+            where p.is_deleted=0 order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]); 
 
         foreach($datas as $data) { 
             $data->companies = DB::select("select r.id, c.name, r.price as price, r.percentage as percentage from 
@@ -87,6 +88,25 @@ class ProductController extends Controller
         if($product->save()) {
             return response()->json([
                 'data' => ["message"=>"Seçilən məhsulun aktivliyi dəyişdirildi"],
+                'error' => null,
+            ]);
+        } else {
+            return response()->json([
+                'data' => null,
+                'error' => ["message"=>"Sistem xətası"],
+            ]);
+        }
+
+    }  
+
+    public function AddMenu(Request $request) {
+
+        $product = Products::find($request->rowId);
+        $product->menu_id = $request->menuId;
+        
+        if($product->save()) {
+            return response()->json([
+                'data' => ["message"=>"Uğurlu əməliyyat"],
                 'error' => null,
             ]);
         } else {

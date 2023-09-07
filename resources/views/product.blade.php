@@ -17,7 +17,9 @@
                         </li>
 
                         <li><a href="/">Əsas səhifə</a></li>
-                        <li class="slash"><a href="/public/sub-categories/{{ $data->categoryId }}">{{ $data->categoryName }}</a></li>
+                        @if($data->categoryName !==null)
+                            <li class="slash"><a href="/public/sub-categories/{{ $data->categoryId }}">{{ $data->categoryName }}</a></li>
+                        @endif
                         <li class="slash"><a href="#" id="product-image-color">{{ $data->name }}</a></li>
 
                     </ul>

@@ -81,7 +81,7 @@
 
                             @foreach($menus as $key => $menu)
                             <li>
-                                <a href="#">{{ $menu->name }}</a> 
+                                <a href="{{ $menu->is_product===0 ? '#' : '/special-products/'.$menu->uuid }}">{{ $menu->name }}</a> 
                                 @if(count($menu->categories)>0)
                                 <i class="fa-solid fa-chevron-down icon-down"></i>
                                 <div class="under-menu-box">

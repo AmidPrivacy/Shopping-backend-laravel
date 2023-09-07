@@ -9,9 +9,14 @@ use Illuminate\Support\Str;
 class MenuController extends Controller
 {
      
-    public function list() {
+    public function list(Request $request) {
+
+        $query = "";
+        if($request->type !==null) {
+            $query = " and is_product=".$request->type;
+        }
     
-        $datas = DB::select("select id, name from menus where is_deleted=0 order by id desc"); 
+        $datas = DB::select("select id, name, is_product from menus where is_deleted=0".$query." order by id desc"); 
      
         return response()->json([
             'data' => $datas,
@@ -61,6 +66,7 @@ class MenuController extends Controller
         }
         
         $menu->name = $request->name; 
+        $menu->is_product = $request->isProduct; 
         
         
         if($menu->save()) { 
