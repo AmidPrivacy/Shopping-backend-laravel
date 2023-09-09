@@ -17,15 +17,52 @@ class ProductController extends Controller
         $limit = isset($request->limit) ? $request->limit : 10; 
         $offset = isset($request->offset) ? $request->offset*10 : 0; 
 
-        $allProducts = DB::select("select p.id from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0");
+        $sql = "";
+        $companySql = "";
+
+        if($request->id) {
+            $sql .= " and p.id=".$request->id;
+        }
+
+        if($request->name) {
+            $sql .= " and p.name=".$request->name;
+        }
+
+        if($request->name) {
+            $sql .= " and p.name=".$request->name;
+        }
+
+        if($request->parentCategoryId) {
+            $sql .= " and p.parent_category_id=".$request->parentCategoryId;
+        }
+
+        if($request->categoryId) {
+            $sql .= " and p.category_id=".$request->categoryId;
+        }
+
+        if($request->price) {
+            $sql .= " and p.price=".$request->price;
+        }
+
+        if($request->discount) {
+            $sql .= " and p.discount=".$request->discount;
+        }
+
+        if($request->menuId) {
+            $sql .= " and p.menu_id=".$request->menuId;
+        }
+ 
+        
+        $allProducts = DB::select("select p.id from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0".$sql);
         
         $datas = DB::select("select p.id, p.uuid, p.name, p.isFront, m.name as menu, p.description, p.price, p.discount, c.name as category, p.warranty, 
             p.star, p.created_at from products p left join sub_categories c on p.category_id=c.id left join menus m on p.menu_id=m.id
-            where p.is_deleted=0 order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]); 
+            where p.is_deleted=0".$sql." order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]); 
 
-        foreach($datas as $data) { 
+        foreach($datas as $key => $data) { 
             $data->companies = DB::select("select r.id, c.name, r.price as price, r.percentage as percentage from 
                 product_company_relations r inner join companies c on r.company_id=c.id where r.product_id=? and r.is_deleted=0", [$data->id]); 
+            // if($request->companyId && count($data->companies)===0) {  unset($datas[$key]);  }
         }
 
         foreach($datas as $data) { 
@@ -38,6 +75,8 @@ class ProductController extends Controller
             inner join general_values g on p.value_id=g.id inner join types t on g.type_id=t.id
             where p.product_id=? and p.is_deleted=0", [$data->id]); 
         }
+
+        // dd($datas);
          
         return response()->json([
             'data' => ["products"=>$datas, "totalCount"=>count($allProducts)],

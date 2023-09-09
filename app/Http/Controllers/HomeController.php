@@ -40,6 +40,37 @@ class HomeController extends Controller
 
     }
 
+    public function searchByName(Request $request) {
+
+
+        $all = DB::select("select id from products where is_deleted=0 and name like '%".$request->name."%'");
+
+        $products = DB::select("select id, name, price, discount, star, uuid from products where is_deleted=0 and name like '%".$request->name."%'"); 
+
+        foreach($products as $product) { 
+            $product->images = DB::select("select name from product_images where product_id=? 
+                                            and is_deleted=0", [$product->id]);
+        }
+
+ 
+        $menus = DB::select("select id, name, is_product, uuid from menus where is_deleted=0");
+        foreach($menus as $menu) { 
+            if($menu->is_product===0) {
+                $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
+                foreach($categories as $category) { 
+                    $category->subs = DB::select("select id, name, uuid from sub_categories where category_id=? and is_deleted=0", [$category->id]);
+                }
+            } else {
+                $categories = [];
+            }
+            $menu->categories = $categories;
+        } 
+
+      
+        return view('categories')->with(['category'=>null, "menus"=>$menus, "products"=>$products, 
+                    "isParent"=>false, "currentPage" =>($request->offset??0+1), "totalCount"=>count($all)]); 
+    }
+
 
     public function getById($id)
     {  
@@ -158,6 +189,7 @@ class HomeController extends Controller
 
     public function categories($id, Request $request)
     {  
+        
         $categoryInfo = DB::select("select id, name from sub_categories where uuid like '".$id."'"); 
        
         if(count($categoryInfo)===0) {

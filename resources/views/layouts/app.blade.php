@@ -64,8 +64,8 @@
                 </div>
 
                 <!-- search bootstrap -->
-                <form class="search" role="search"> 
-                    <input type="search" placeholder="Axtar..." aria-label="Search">
+                <form class="search" role="search" method="get" action="search"> 
+                    <input type="search" placeholder="Axtar..." name="name" aria-label="Search">
                     <button class="btn" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>

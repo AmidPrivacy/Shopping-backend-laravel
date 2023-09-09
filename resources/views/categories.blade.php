@@ -7,21 +7,20 @@
     <!-- Category name and bredcrumb  -->
     <section class="home-page">
         <div class="custom-container d-flex" style="justify-content: space-around; width: 100%">
-
+            @if($category !==null)
             <div class="align-items-center">
                 <h1>{{ $category[0]->name }}</h1>
             </div>
-
+            @endif
             <div class="home-shop"> 
                 <nav>
                     <ul class="home-shop-icon">
                         <li><i class="fa-solid fa-house" id="home"></i></li>
                         <li><a href="/">Əsas səhifə</a></li> 
-                        <li class="slash"><span>{{ $category[0]->name }}</span></li>
+                        @if($category !==null)<li class="slash"><span>{{ $category[0]->name }}</span></li>@endif
                     </ul>
                 </nav> 
             </div>
-
         </div> 
     </section>
 
