@@ -146,7 +146,7 @@
                                 <button>Prevision</button> 
                                 <div class="pagination">
                                     @for ($i = 1; $i < ceil($totalCount/10)+1; $i++)
-                                        <a href="#">{{ $i }}</a>
+                                        <a href="#" class="{{ $currentPage === $i ? 'is-selected' : '' }}" >{{ $i }}</a>
                                     @endfor 
                                 </div> 
                                 <button>Next</button> 

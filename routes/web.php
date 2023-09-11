@@ -37,6 +37,7 @@ Route::get('/clear-cart', [CartController::class, 'clearcart']);
 Route::get('/load-basket', [CartController::class, 'loadBasket']);
 
 
+
 $router->get('/version', function () use ($router) {
     return $router->app->version();
 });

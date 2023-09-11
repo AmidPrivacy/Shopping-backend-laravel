@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request; 
 use Illuminate\Support\Facades\DB; 
-use  App\Models\Products; 
-use  App\Models\Floors; 
+use App\Models\Products; 
+use App\Models\Floors; 
+use App\Models\Subscribers;  
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cookie;
 
@@ -70,7 +71,6 @@ class HomeController extends Controller
         return view('categories')->with(['category'=>null, "menus"=>$menus, "products"=>$products, 
                     "isParent"=>false, "currentPage" =>($request->offset??0+1), "totalCount"=>count($all)]); 
     }
-
 
     public function getById($id)
     {  
@@ -245,21 +245,18 @@ class HomeController extends Controller
         $paging = " LIMIT ".($request->limit??10)." OFFSET ".($request->offset??0)*10;
 
 
-   
  
-        $all = DB::select("select p.id from categories c inner join sub_categories s_c on c.id=s_c.category_id 
-                            inner join products p on s_c.id=p.category_id where p.is_deleted=0 and c.uuid like '".$id."'");
+        $all = DB::select("select id from products where is_deleted=0 and parent_category_id=".$categoryInfo[0]->id);
 
-        $products = DB::select("select p.id, p.name, p.price, p.discount, p.star, p.uuid from categories c 
-                                inner join sub_categories s_c on c.id=s_c.category_id inner join products p 
-                                on s_c.id=p.category_id where p.is_deleted=0 and c.uuid like '".$id."'"); 
+        $products = DB::select("select id, name, price, discount, star, uuid from products 
+                                where is_deleted=0 and parent_category_id=".$categoryInfo[0]->id.$paging); 
 
         foreach($products as $product) { 
             $product->images = DB::select("select name from product_images where product_id=? 
                                             and is_deleted=0", [$product->id]);
         }
 
- 
+         
         $menus = DB::select("select id, name, is_product, uuid from menus where is_deleted=0");
         foreach($menus as $menu) { 
             if($menu->is_product===0) {
@@ -273,15 +270,24 @@ class HomeController extends Controller
             $menu->categories = $categories;
         } 
 
-        $types = DB::select("select t.id, t.name from general_values v inner join types t on v.type_id = t.id 
+        $mixedTypes = DB::select("select t.id, t.name from general_values v left join types t on v.type_id = t.id 
                     where v.is_deleted=0 and v.category_id=?",[$categoryInfo[0]->id]);
  
-        foreach($types as $type) { 
+  
+
+        $types = [];
+
+        foreach($mixedTypes as $type) { 
+
             $type->values = DB::select("select id, name from general_values where is_deleted=0 and 
                 category_id=? and type_id=?",[$categoryInfo[0]->id, $type->id]);
+
+            $check = array_search($type->id, array_column($types, 'id'));
+   
+            if($check === false) { array_push($types, $type);  } 
         }
 
-        // dd($types);
+        
         return view('categories')->with(['category'=>$categoryInfo, "menus"=>$menus, "products"=>$products, "isParent"=>true,
                 "currentPage" =>($request->offset??0+1), "totalCount"=>count($all), "subcategories" => $subcategories,
                 "currentRange" => ($request->offset??0)." - ".($request->limit??(count($all)<10 ? count($all) : 10)), "types" => $types
@@ -303,7 +309,7 @@ class HomeController extends Controller
             $query .= " and v.value_id IN (".$request->valueIds.")";
         }
 
-        $query .= "  group by p.id"; 
+        $query .= "  group by p.id, p.name, p.price, p.discount, p.star, p.uuid"; 
  
         if($request->order=="0" || $request->order=="1" || $request->order=="2") {
             if($request->order=="0") {
@@ -318,14 +324,22 @@ class HomeController extends Controller
         $queryAll = $query;
         $queryFilter = $query.$paging;
  
-        $all = DB::select("select p.id from categories c inner join sub_categories s_c on c.id=s_c.category_id 
-                            inner join products p on s_c.id=p.category_id inner join product_value_relations v 
-                            on p.id=v.product_id where p.is_deleted=0 and c.uuid like '".$request->id."'".$queryAll);
+        // $all = DB::select("select p.id from categories c inner join sub_categories s_c on c.id=s_c.category_id 
+        //                     inner join products p on s_c.id=p.category_id inner join product_value_relations v 
+        //                     on p.id=v.product_id where p.is_deleted=0 and c.uuid like '".$request->id."'".$queryAll);
 
-        $products = DB::select("select p.id, p.name, p.price, p.discount, p.star, p.uuid from categories c 
-                                inner join sub_categories s_c on c.id=s_c.category_id inner join products p 
-                                on s_c.id=p.category_id inner join product_value_relations v 
-                                on p.id=v.product_id where p.is_deleted=0 and c.uuid like '".$request->id."'".$queryFilter); 
+        // $products = DB::select("select p.id, p.name, p.price, p.discount, p.star, p.uuid from categories c 
+        //                         inner join sub_categories s_c on c.id=s_c.category_id inner join products p 
+        //                         on s_c.id=p.category_id inner join product_value_relations v 
+        //                         on p.id=v.product_id where p.is_deleted=0 and c.uuid like '".$request->id."'".$queryFilter); 
+
+        $all = DB::select("select p.id from products p inner join categories c on c.id=p.parent_category_id 
+                        inner join product_value_relations v on p.id=v.product_id where p.is_deleted=0 and 
+                        c.uuid like '".$request->id."'".$queryAll);
+
+        $products = DB::select("select p.id, p.name, p.price, p.discount, p.star, p.uuid from products p 
+                    inner join categories c on c.id=p.parent_category_id inner join product_value_relations v on 
+                    p.id=v.product_id where p.is_deleted=0 and c.uuid like '".$request->id."'".$queryFilter); 
 
         foreach($products as $product) { 
             $product->images = DB::select("select name from product_images where product_id=? and is_deleted=0", [$product->id]);

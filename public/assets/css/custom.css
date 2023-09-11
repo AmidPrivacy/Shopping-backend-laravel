@@ -355,6 +355,19 @@ div .trending-prod {
     margin-bottom: 20px;
 }
 
+.subscribe-section .subscription-title p {
+    text-align: center;
+    color: #fff;
+    background-color: green;
+    width: 520px;
+    margin: 0 auto;
+    position: relative;
+    bottom: 7px;
+    border-radius: 4px;
+    padding: 4px 0;
+    display: none;
+}
+
 .subscribe-section .newsletter-footer {
     text-align: center; 
     font-size: 15px;

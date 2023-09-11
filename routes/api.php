@@ -15,6 +15,7 @@ use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ScraperController;
+use App\Http\Controllers\SubscriberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -150,6 +151,13 @@ use App\Http\Controllers\ScraperController;
     $router->get('/order/{id}', [OrderController::class, 'getById']);
     $router->put('/order-status', [OrderController::class, 'setStatus']);
 
+    //Subscriber apis
+    Route::get('/subscribers', [SubscriberController::class, 'index']); 
+    Route::post('/add-subscriber', [SubscriberController::class, 'addSubscriber']);
+
 
 
     $router->post('/scraper', ScraperController::class);
+
+
+    

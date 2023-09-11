@@ -17,7 +17,7 @@
     @yield('css') 
 </head>
 <body>
-<header>
+    <header>
         <div class="header-top">
             <div class="custom-container">
 
@@ -50,7 +50,7 @@
             <div class="custom-container">
 
                 <div class="brand">
-                    <a href="#">
+                    <a href="/">
                         <img src="/assets/img/brand.svg" alt="photo">
                     </a>
                 </div>
@@ -64,8 +64,8 @@
                 </div>
 
                 <!-- search bootstrap -->
-                <form class="search" role="search" method="get" action="search"> 
-                    <input type="search" placeholder="Axtar..." name="name" aria-label="Search">
+                <form class="search" method="get" action="search"> 
+                    <input type="search" placeholder="Axtar..." name="name" required>
                     <button class="btn" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
