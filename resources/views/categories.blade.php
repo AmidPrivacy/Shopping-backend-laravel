@@ -103,7 +103,8 @@
                             @if($isParent)
                             <div class="filter-row">
                                 <div class="pagination-column">
-                                    Məhsul: {{ $currentRange }} <b>({{ $totalCount }})</b> 
+                                    Məhsul: <span>{{ $currentRange }}</span> 
+                                    <b>({{ $totalCount }})</b> 
                                 </div>
  
                                 <select class="filter-sorting" aria-label="Default select example">
@@ -143,13 +144,13 @@
                             </div>
                             @if($totalCount>10 && $isParent)
                             <div class="pagination-box">
-                                <button>Prevision</button> 
+                                <button class="prev"><</button> 
                                 <div class="pagination">
                                     @for ($i = 1; $i < ceil($totalCount/10)+1; $i++)
                                         <a href="#" class="{{ $currentPage === $i ? 'is-selected' : '' }}" >{{ $i }}</a>
                                     @endfor 
                                 </div> 
-                                <button>Next</button> 
+                                <button class="next">></button> 
                             </div>
                             @endif
                         </div>
@@ -198,10 +199,47 @@
                 setTimeout(() => {  filter() }, 1000);
             }); 
 
+            $(document).on("click", ".pagination-box .pagination a", function(e) { 
+
+                e.preventDefault();
+
+                let val = $(this).text();
+                val = Number(val)-1;
+
+                $(".pagination-box .pagination a").removeClass("is-selected");
+                $(this).addClass("is-selected");
+                filter(val);
+
             
+            });
 
+            $(".pagination-box button").click(function(){
 
-            function filter() {
+                const selectedPage = $(".pagination a.is-selected");
+                let page = selectedPage.text();
+                var offset;
+                let action = false;
+                if($(this).attr("class") === "prev") {
+                    if(page !=="1") {
+                        offset = Number(page)-2;
+                        action = true;
+
+                        $(".pagination-box .pagination a").removeClass("is-selected");
+                        selectedPage.prev().addClass("is-selected");
+                    } 
+                } else {
+                    if($(".pagination a").length !== Number(page)) {
+                        offset = Number(page);
+                        action = true;
+                        $(".pagination-box .pagination a").removeClass("is-selected");
+                        selectedPage.next().addClass("is-selected");
+                    } 
+                }
+
+                if(action) { filter(offset) }
+            })
+
+            function filter(offset=null) {
 
                 var categories = [];
                 $('.form-check .form-check-input:checked').each(function(i){
@@ -218,6 +256,7 @@
                 const order = $(".filter-row .filter-sorting").val();
 
                 const uuid = location.pathname.split("/")[location.pathname.split("/").length-1];
+                // const offset = $(".pagination a.is-selected").text();
 
                 $.post( "/product-filter", 
                     { 
@@ -226,6 +265,7 @@
                         categoryIds: categories.join(","),
                         order,
                         endPrice: price,
+                        offset 
                 }).done(function( data ) { 
 
                     const str = data.products.map(res=> {
@@ -257,9 +297,25 @@
                         }
                     });
 
-                    $(".section-three-content .product-box").html(str.join(" "))
+                    $(".categories-content .pagination-column").find("span").text(data.currentRange);
+                    $(".categories-content .pagination-column").find("b").text("("+data.totalCount+")");
 
-                
+                    if(data.totalCount<=10) {
+                        $(".pagination-box").css("display", "none"); 
+                    } else {
+                        $(".pagination-box").css("display", "block"); 
+
+                        if(offset===null) {
+                            let pages = ''; 
+                            for (let i = 1; i < Math.ceil(data.totalCount/10)+1; i++){
+                                pages += `<a href="#" class="${i===1 ? 'is-selected' : '' }" >${i}</a>`
+                            }  
+                            $(".pagination-box div").html(pages)
+                        }
+                    }
+
+                    $(".section-three-content .product-box").html(str.join(" "))
+ 
                 }); 
             }
 

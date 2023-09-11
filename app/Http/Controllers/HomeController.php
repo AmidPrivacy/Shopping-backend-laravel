@@ -324,28 +324,23 @@ class HomeController extends Controller
         $queryAll = $query;
         $queryFilter = $query.$paging;
  
-        // $all = DB::select("select p.id from categories c inner join sub_categories s_c on c.id=s_c.category_id 
-        //                     inner join products p on s_c.id=p.category_id inner join product_value_relations v 
-        //                     on p.id=v.product_id where p.is_deleted=0 and c.uuid like '".$request->id."'".$queryAll);
-
-        // $products = DB::select("select p.id, p.name, p.price, p.discount, p.star, p.uuid from categories c 
-        //                         inner join sub_categories s_c on c.id=s_c.category_id inner join products p 
-        //                         on s_c.id=p.category_id inner join product_value_relations v 
-        //                         on p.id=v.product_id where p.is_deleted=0 and c.uuid like '".$request->id."'".$queryFilter); 
 
         $all = DB::select("select p.id from products p inner join categories c on c.id=p.parent_category_id 
-                        inner join product_value_relations v on p.id=v.product_id where p.is_deleted=0 and 
+                        left join product_value_relations v on p.id=v.product_id where p.is_deleted=0 and 
                         c.uuid like '".$request->id."'".$queryAll);
 
         $products = DB::select("select p.id, p.name, p.price, p.discount, p.star, p.uuid from products p 
-                    inner join categories c on c.id=p.parent_category_id inner join product_value_relations v on 
+                    inner join categories c on c.id=p.parent_category_id left join product_value_relations v on 
                     p.id=v.product_id where p.is_deleted=0 and c.uuid like '".$request->id."'".$queryFilter); 
 
         foreach($products as $product) { 
             $product->images = DB::select("select name from product_images where product_id=? and is_deleted=0", [$product->id]);
         }
 
-        return ["products"=>$products, "totalCount"=>count($all)];
+        $offset = $request->offset??0;
+        $limit = ($offset+1)*10;
+
+        return ["products"=>$products, "totalCount"=>count($all), "currentRange" => ($offset*10)." - ".$limit];
 
     }
 

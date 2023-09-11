@@ -500,8 +500,9 @@ input[type=range].min-price::-webkit-slider-runnable-track {
 }
 
 .pagination-box button {
-    width: 100px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
+    padding-bottom: 7px;
     margin: 15px;
     background: #f5f9fc;
     border: 1px solid;
