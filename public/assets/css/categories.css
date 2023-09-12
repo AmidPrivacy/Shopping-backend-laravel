@@ -477,6 +477,8 @@ input[type=range].min-price::-webkit-slider-runnable-track {
 
 .categories-content .product-box .product-item img {
     width: 100%;
+    height: 300px;
+    object-fit: contain;
 }
 
 .categories-content .product-box .product-item .card-body {
@@ -498,8 +500,9 @@ input[type=range].min-price::-webkit-slider-runnable-track {
 }
 
 .pagination-box button {
-    width: 100px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
+    padding-bottom: 7px;
     margin: 15px;
     background: #f5f9fc;
     border: 1px solid;
@@ -528,6 +531,11 @@ input[type=range].min-price::-webkit-slider-runnable-track {
     margin: 0 5px;
     cursor: pointer;
 
+}
+
+.pagination a.is-selected {
+    color: #2196F3;
+    font-weight: 700;
 }
 
 .pagination a:hover {

@@ -423,7 +423,7 @@ section.section-table {
 .detail-custom-container .image-tab-box {
     position: absolute;
     width: 37.9%;
-    margin-top: -86px;
+    margin-top: 0;
     height: 86px;
     overflow: hidden;
 }

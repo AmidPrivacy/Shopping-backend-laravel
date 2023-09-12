@@ -210,14 +210,15 @@
      <!-- SECTION newsletter -->
      <section class="subscribe-section">
         <div class="custom-container">
-            <div>
+            <div class="subscription-title">
                 <h6 class="newsletter-h6">— Yeniliklər</h6>
                 <h2 class="newsletter-h2">Yeniliklərdən xəbərdar olmaq üçün </h2>
+                <p></p>
             </div>
 
-            <form class="email" role="doc-example">
+            <form class="email">
                 <input type="email" placeholder="Email adress" aria-label="Email address">
-                <button class="btn" type="submit">Abunə ol</button>
+                <button class="btn" type="button">Abunə ol</button>
             </form>
 
             <div class="newsletter-footer">
@@ -241,5 +242,40 @@
             </div> 
         </div>
     </section>
+
+@endsection
+
+@section('js') 
+
+<script>
+
+    $(document).ready(function () {
+
+        $(".subscribe-section .email button").click(function() {
+            const val = $(".subscribe-section .email input").val();
+            if(val.length>0 && val.includes("@")) {
+                const data = {
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    "mail": val,
+                };
+
+                $.ajax({
+                    url: '/api/add-subscriber',
+                    type: 'post',
+                    data,
+                    success: function (response) {
+                        $(".subscribe-section .email input").val("");
+                        $(".subscribe-section .subscription-title p").css("display", "block").text(response.data.message)
+                  
+                    }
+                });
+            }
+        })
+
+        
+
+    });
+
+</script>
 
 @endsection
