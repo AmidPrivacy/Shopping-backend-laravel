@@ -8,6 +8,7 @@ use  App\Models\Orders;
 use App\Models\Products;
 use  App\Models\Rows;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cookie;
 
 class OrderController extends Controller
 {
@@ -86,7 +87,7 @@ class OrderController extends Controller
 
         $order = new Orders;
 
-        $order->fullname = $request->fullname;
+        $order->fullname = $request->fullName;
         $order->phone = $request->phone;
         $order->email = $request->mail;
         $order->address = $request->address;
@@ -95,13 +96,17 @@ class OrderController extends Controller
 
         if($order->save()) {
             $relations = [];
-            foreach ($request->items as $item)
+
+            $cart_data = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', Cookie::get('shopping_cart')), true );
+   
+            // foreach ($request->items as $item)
+            foreach ($cart_data as $item)
             {
-                $product = Products::where('uuid', $item['id'])->first();
+                $product = Products::where('uuid', $item['item_id'])->first();
                 array_push($relations, [
                     'order_id' => $order->id,
                     'product_id' => $product->id,
-                    'qty' => $item['quantity'],
+                    'qty' => $item['item_quantity'],
                     'uuid' => Str::uuid()
                 ]);
             }

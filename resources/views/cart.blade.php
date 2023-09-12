@@ -213,15 +213,15 @@
                 if (isValid) {
                     //call api with ajax
                     $.ajax({
-                    url: '/order',
-                    type: 'POST',
-                    data: $('#order-form').serialize(),
-                    success: function(response) {
-                        if(response.data.error === null) {
-                            window.location.href = "/success-order";
+                        url: '/order',
+                        type: 'POST',
+                        data: $('#order-form').serialize(),
+                        success: function(response) {
+                            if(response.data.error === null) {
+                                window.location.href = "/success-order";
+                            }
                         }
-                    }
-                });
+                    });
                 }
 
             });

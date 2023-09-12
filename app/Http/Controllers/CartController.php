@@ -18,7 +18,7 @@ class CartController extends Controller
 
         $cart_data = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', Cookie::get('shopping_cart')), true );
 
-        $menus = DB::select("select id, name from menus where is_deleted=0");
+        $menus = DB::select("select id, name, is_product from menus where is_deleted=0");
 
         foreach($menus as $menu) {
             $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
@@ -161,7 +161,7 @@ class CartController extends Controller
     {
         //$this->clearcart();
 
-        $menus = DB::select("select id, name from menus where is_deleted=0");
+        $menus = DB::select("select id, name, is_product from menus where is_deleted=0");
 
         foreach($menus as $menu) {
             $categories = DB::select("select id, name, uuid from categories where menu_id=? and is_deleted=0", [$menu->id]);
