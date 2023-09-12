@@ -28,14 +28,16 @@ class ScraperController extends Controller
             ]);
         }
         $catIds = explode('_', $request->input('category'));
-        $categoryId = end($catIds);
+        $parentCatId = $catIds[0];
+        $childCatId = isset($catIds[1]) ? $catIds[1] : null;
 
         $product = new Products();
         $product->name = $data['title'];
         //$product->description = $request->description;
         //$product->price = $request->price;
         $product->discount = 0;
-        $product->category_id = $categoryId;
+        $product->category_id = $childCatId;
+        $product->parent_category_id = $parentCatId;
         $product->warranty = 0;
         $product->uuid = (string) Str::uuid();
 
@@ -56,9 +58,33 @@ class ScraperController extends Controller
                 }
             }
 
+            if(count($data['features'])) {
+                $specifications = [];
 
-            foreach ($data['features'] as $feature) {
-                //
+                foreach ($data['features'] as $value) {
+                    if($value['value'] === 'Məlumat yoxdur') {
+                        continue;
+                    }
+                    $checkFeat = DB::select("select id from specifications where is_deleted=0 and name=?", [$value['key']]);
+                    if(count($checkFeat)) {
+                        array_push($specifications, [
+                            'specification_id' => $checkFeat[0]->id,
+                            'value' => $value['value'],
+                            'product_id' => $product->id
+                        ]);
+                    } else {
+                        $inserted = DB::table('specifications')->insertGetId(['name' => $value['key']]);
+                        array_push($specifications, [
+                            'specification_id' => $inserted,
+                            'value' => $value['value'],
+                            'product_id' => $product->id
+                        ]);
+                    }
+                }
+                if(count($specifications)) {
+                    $insertedSp = DB::table('product_specification_relations')->insert($specifications);
+                }
+
             }
             return response()->json([
                 'data' => ["message"=>"Məhsul sistemə əlavə olundu"],

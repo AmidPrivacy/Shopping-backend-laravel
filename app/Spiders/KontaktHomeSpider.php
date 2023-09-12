@@ -43,18 +43,36 @@ class KontaktHomeSpider extends BasicSpider
     public function parse(Response $response): Generator
     {
         $title =  $response->filter('meta[property="og:title"]')->attr('content');
-        $price = $response->filter('meta[property="product:price:amount"]')->attr('content');
         $images =  $response->filter('#maincontent > div.productCont div.breeze-gallery.vertical div.thumbnails a')->each(function($node) {
             return $node->attr('href');
         });
         $features =  $response->filter('#maincontent > div.productCont div.tabbs div.tables__items div:nth-child(1) div div.har div.har__row')->each(function($node) {
-            return ['title' => $node->filter('div.har__title')->text(), 'value' => $node->filter('div.har__znach')->text()];
+            return ['key' => $node->filter('div.har__title')->text(), 'value' => $node->filter('div.har__znach')->text()];
         });
         yield $this->item([
             'title' => $title,
-            'price' => $price,
             'images' => $images,
             'features' => $features,
+        ]);
+    }
+
+
+
+    public function parse2(Response $response): Generator
+    {
+        $title =  $response->filter('#product-info h1.title')->text();
+        $images =  $response->filter('#product-info > div.product-img-view > div.menu-view > div.side-menu > .slider > button > img')->each(function($node) {
+            return str_replace('_png.webp', '.png', $node->attr('data-src'));
+        });
+        $_features =  $response->filter('#review-tabs #myTabContent ul li')->each(function($node) {
+            return $node->text();
+        });
+        $features = array_chunk($_features, count($_features) / 2);
+
+        yield $this->item([
+            'title' => $title,
+            'images' => $images,
+            'features' => array_combine($features[0], $features[1]),
         ]);
     }
 }

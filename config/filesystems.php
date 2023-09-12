@@ -58,7 +58,7 @@ return [
 
         'custom' => [
             'driver' => 'local',
-            'root' => public_path('uploads'),
+            'root' => base_path('uploads'),
             'throw' => false,
         ],
 
