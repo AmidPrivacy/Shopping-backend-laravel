@@ -107,7 +107,7 @@
                                                         </td>
                                                         <td class="cart-product-name-info">
                                                             <h4 class='cart-product-description'>
-                                                                <a href="javascript:void(0)">{{ $data['item_name'] }}</a>
+                                                                <a href="/product/{{ $data['item_id'] }}" target="_blank">{{ $data['item_name'] }}</a>
                                                             </h4>
                                                         </td>
                                                         <td class="cart-product-sub-total">
@@ -216,8 +216,8 @@
                         url: '/order',
                         type: 'POST',
                         data: $('#order-form').serialize(),
-                        success: function(response) {
-                            if(response.data.error === null) {
+                        success: function(response) { 
+                            if(response.data.error == null) {
                                 window.location.href = "/success-order";
                             }
                         }

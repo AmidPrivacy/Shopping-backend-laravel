@@ -117,10 +117,9 @@
                             @endif
                              
                             <div class="product-box">
-                            @foreach($products as $key => $product)
-                                @if(count($product->images)>0)
+                            @foreach($products as $key => $product) 
                                 <div class="product-item">
-                                    <img src="/uploads/products/{{ $product->images[0]->name }}" alt=""> 
+                                    <img src="/uploads/products/{{ count($product->images)>0 ? $product->images[0]->name : 'not-found.jpg' }}" alt=""> 
                                     <div class="card-body">
                                         <div class="product-info">
                                             <a href="/product/{{ $product->uuid }}">{{ $product->name }}</a>
@@ -138,8 +137,7 @@
                                             </div> 
                                         </div>
                                     </div> 
-                                </div>
-                                @endif
+                                </div> 
                             @endforeach
                             </div>
                             @if($totalCount>10 && $isParent)

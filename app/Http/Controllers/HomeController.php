@@ -239,7 +239,7 @@ class HomeController extends Controller
         }
  
 
-        $subcategories = DB::select("select c.id, c.name from categories p inner join sub_categories c on p.id=c.category_id where p.uuid like '".$id."'"); 
+        $subcategories = DB::select("select c.id, c.name from categories p inner join sub_categories c on p.id=c.category_id where c.is_deleted=0 and p.uuid like '".$id."'"); 
 
   
         $paging = " LIMIT ".($request->limit??10)." OFFSET ".($request->offset??0)*10;

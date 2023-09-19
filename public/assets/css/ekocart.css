@@ -266,6 +266,7 @@ header nav ul li .under-menu-box .main-category-item>a:hover {
 
 header nav ul li .under-menu-box .main-category-item:hover .sub-category-box {
     display: block;
+    height: -webkit-fill-available;
 }
 
 header nav ul li .under-menu-box .sub-category-box {
@@ -284,6 +285,7 @@ header nav ul li .under-menu-box .sub-category-box a:hover {
 }
 
 .navbar-icons {
+    height: 50px;
     float: right;
 }
 
@@ -417,7 +419,7 @@ section.section-table {
 .detail-custom-container .product-img>img {
     height: 500px;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .detail-custom-container .image-tab-box {

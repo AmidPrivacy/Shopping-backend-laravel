@@ -12,9 +12,9 @@
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/css/owl.carousel.min.css">
     <link rel="stylesheet" href="/assets/css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="/assets/css/all.min.css">
-    <!-- <link rel="stylesheet" href="/assets/css/spacing.css"> -->
+    <link rel="stylesheet" href="/assets/css/all.min.css"> 
     @yield('css') 
+    <link rel="stylesheet" href="/assets/css/responsive.css">
 </head>
 <body>
     <header>
