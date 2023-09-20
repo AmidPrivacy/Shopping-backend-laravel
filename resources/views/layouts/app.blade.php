@@ -112,13 +112,16 @@
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                     </div> 
+                    <div class="mobile-toggle">
+                        <i class="fa-solid fa-bars"></i>
+                    </div>
                 </div>
                 
             </div>
         </div>
 
     </header>
-
+  
     @yield('content') 
 
     <!-- FOOTER -->
@@ -341,6 +344,13 @@
             });
 
 
+            $(".header-brand .mobile-toggle").click(function(){
+                if($("header").hasClass('mobile-menu')) {
+                    $("header").removeClass("mobile-menu")
+                } else {
+                    $("header").addClass("mobile-menu")
+                }
+            })
 
         });
     </script>

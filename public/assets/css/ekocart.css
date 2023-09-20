@@ -300,6 +300,9 @@ header nav ul li .under-menu-box .sub-category-box a:hover {
 }
 
  
+.header-brand .mobile-toggle {
+    display: none;
+}
 
 nav i {
     color: gray;

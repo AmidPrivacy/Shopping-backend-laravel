@@ -85,11 +85,82 @@
     header nav ul li {
         margin: 20px 0.7% 0;
     }
+    
     .call-us a {
         font-size: 14px;
     }
 
     .section-page-two {
         margin-left: 0;
+    }
+}
+
+@media only screen and (max-width: 769px) {
+    header {
+        height: 122px;
+    }
+ 
+    header.mobile-menu {
+        height: 100vh;
+        position: fixed; 
+        width: 100%;
+    }
+
+    header.mobile-menu .header-brand {
+        background-color: #fff;
+        position: relative;
+        bottom: 3px;
+    }
+
+    
+
+    .header-brand .call-us, .header-brand .search, .header-brand nav  {
+        display: none;
+    }
+
+    .header-brand .navbar-icons {
+        position: absolute;
+        right: 85px;
+        top: 49px;
+    }
+
+    .header-brand .mobile-toggle {
+        display: block;
+        position: absolute;
+        right: 41px;
+        font-size: 26px;
+        top: 45px;
+    }
+
+    header.mobile-menu .header-brand .mobile-toggle {
+        top: 2px;
+    }
+
+    header.mobile-menu .header-brand .navbar-icons {
+        top: 6px;
+    }
+
+    .mobile-menu nav {
+        display: block;
+        width: 104%;
+        background: #ececec;
+        position: relative;
+        z-index: 100;
+        margin-left: -2%;
+        top: 6px;
+    }
+
+    .mobile-menu nav li {
+        display: block;
+        float: unset;
+        width: 100%;
+        text-align: center;
+        height: 25px;
+        line-height: 25px; 
+    }
+
+    .mobile-menu nav li a {
+        font-size: 16px;
+        font-weight: 700;
     }
 }
