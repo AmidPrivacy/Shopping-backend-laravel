@@ -316,6 +316,10 @@ nav i {
     display: contents;
 }
 
+header nav ul li .under-menu-box .main-category-item>i {
+    display: none;
+}
+
 /* .custom-container nav li :hover {
     color: red;
     transform: rotate(-180deg);
