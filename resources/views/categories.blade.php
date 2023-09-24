@@ -5,7 +5,7 @@
 @section('content') 
  
     <!-- Category name and bredcrumb  -->
-    <section class="home-page">
+    <section class="home-page bredcrumb-box">
         <div class="custom-container d-flex" style="justify-content: space-around; width: 100%">
             @if($category !==null)
             <div class="align-items-center">
@@ -25,14 +25,14 @@
     </section>
 
     <!--------------------- Filter and products ---------------------->
-    <section class="section-three">
+    <section class="section-three filter-and-products"> 
         <div class="custom-container">
 
             <div class="row">
                 <div class="col-sm-md-12">
 
                     <div class="section-three-content">
-                        @if($isParent)
+                        @if($isParent) 
                         <div class="categories">
 
                             <div class="reset-button">
@@ -40,7 +40,6 @@
                                     Reset
                                 </button>
                             </div>
-
 
                             <h4 id="categories">Kateqoriyalar</h4>
 
@@ -52,7 +51,6 @@
                                 </label> 
                             </div>
                             @endforeach
-
 
                             <!-- PRICE FILTER ///////////////////////////////////////////////////// -->
                             <div class="price-filter">
@@ -100,13 +98,16 @@
                         
                         <!-- Products /////////////// -->
                         <div class="categories-content">
-                            @if($isParent)
+                            @if($isParent) 
                             <div class="filter-row">
                                 <div class="pagination-column">
                                     Məhsul: <span>{{ $currentRange }}</span> 
                                     <b>({{ $totalCount }})</b> 
                                 </div>
- 
+                                <button class="filter-action"> 
+                                    <i class="fa-solid fa-caret-down"></i>
+                                    Filtrlər 
+                                </button>
                                 <select class="filter-sorting" aria-label="Default select example">
                                     <option selected value="">Sıralama</option> 
                                     <option value="0">Ən yenilər</option>
@@ -316,6 +317,20 @@
  
                 }); 
             }
+ 
+
+            $(".filter-and-products .filter-action").click(function(){
+                if($(this).find("i").hasClass('fa-caret-down')) {
+                    $(this).find("i").removeClass('fa-caret-down');
+                    $(this).find("i").addClass('fa-caret-up');
+                    $(".filter-and-products .categories").css("display", "block");
+                } else {
+                    $(this).find("i").removeClass('fa-caret-up');
+                    $(this).find("i").addClass('fa-caret-down');
+                    $(".filter-and-products .categories").css("display", "none");
+                    
+                }
+            })
 
         });
     </script> 

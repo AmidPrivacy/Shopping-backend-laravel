@@ -25,7 +25,7 @@ header {
 }
 
 .header-top-item {
-    width: 20%;
+    width: 23%;
     margin: 5px 0;
     float: left;
     height: 30px;
@@ -240,7 +240,7 @@ header nav ul li .under-menu-box {
 header nav ul li .under-menu-box .sub-category-box {
     position: absolute;
     background-color: #FF5722;
-    margin-left: 80%;
+    margin-left: 92%;
     z-index: 100;
     padding: 7px 20px;
     top: 0;
@@ -265,7 +265,7 @@ header nav ul li .under-menu-box .main-category-item>a:hover {
 }
 
 header nav ul li .under-menu-box .main-category-item:hover .sub-category-box {
-    display: block;
+    display: inline-table;
     height: -webkit-fill-available;
 }
 
@@ -990,4 +990,8 @@ input[type=number] {
 
 .order-form .error-warning { 
     display: block !important;
+}
+
+.filter-and-products .filter-action {
+    display: none;
 }

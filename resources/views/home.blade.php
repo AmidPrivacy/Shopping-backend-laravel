@@ -214,21 +214,15 @@
                 <h6 class="newsletter-h6">— Yeniliklər</h6>
                 <h2 class="newsletter-h2">Yeniliklərdən xəbərdar olmaq üçün </h2>
                 <p></p>
-            </div>
-
+            </div> 
             <form class="email">
                 <input type="email" placeholder="Email adress" aria-label="Email address">
                 <button class="btn" type="button">Abunə ol</button>
-            </form>
-
+            </form> 
             <div class="newsletter-footer">
                 Abunəçilərə birinci ay üçün xidmət ödənişsizdir 
-            </div>
-
-
-
-        </div>
-
+            </div> 
+        </div> 
     </section>
 
 
