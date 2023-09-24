@@ -64,6 +64,18 @@
     .subscribe-section .email {
         width: 70%;
     }
+
+    .product-name-and-breadcrumb>div {
+        margin-left: 0;
+    }
+
+    .header-top-item {
+        width: 65%;
+    }    
+
+    .header-top-item:nth-child(2) {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 890px) {
@@ -78,6 +90,33 @@
 
     header nav {
         width: 92%;
+    }
+
+    .product-name-and-breadcrumb>div { 
+        flex-direction: column-reverse;
+        padding: 25px 0;
+    }
+
+    .product-name-and-breadcrumb .home-shop nav ul{
+        margin: 0;
+        padding-left: 3%;
+    }
+
+    .product-image-details .detail-custom-container {
+        display: block;
+    }
+
+    .product-image-details .product-details {
+        margin-top: 125px;
+    }
+
+    .product-image-details .card-actions {
+        width: 310px;
+        float: right;
+    }
+
+    .product-image-details .cart-action-box {
+        margin-top: 0;
     }
 }
 
@@ -270,6 +309,10 @@
     .bredcrumb-box .home-shop nav ul { 
         margin: 20px 0 29px -9px; 
     }
+
+    .detail-custom-container .image-tab-box img {
+        height: 50px;
+    }
 }
 
 @media only screen and (max-width: 554px) {
@@ -361,12 +404,22 @@
     .custom-container {
         width: 92%;
     }
+    
+
+    .header-top-item {
+        font-size: 10px;
+    }
 }
 
 @media only screen and (max-width: 350px) {
 
     .subscribe-section .email input { 
         width: 72%;
+    }
+
+    .header-top-item {
+        width: 68%;
+        font-size: 9px;
     }
 
 }

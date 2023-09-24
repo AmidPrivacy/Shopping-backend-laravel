@@ -2,38 +2,30 @@
 
 @section('content')
     <!-- SECTION  -->
-    <section class="home-page">
-        <div class="custom-container d-flex " style="justify-content: space-around;margin-left:5%">
-            <div class="align-items-center">
-                <h1>{{ $data->name }}</h1>
-            </div>
-
+    <section class="home-page product-name-and-breadcrumb">
+        <div class="custom-container d-flex filter-row">
+            <div class="align-items-center"><h1>{{ $data->name }}</h1></div>
             <div class="home-shop">
 
                 <nav>
-                    <ul class="home-shop-icon">
-                        <li>
-                            <i class="fa-solid fa-house" id="home"></i>
-                        </li>
-
+                    <ul class="home-shop-icon"> 
+                        <li><i class="fa-solid fa-house" id="home"></i></li>
                         <li><a href="/">Əsas səhifə</a></li>
                         @if($data->categoryName !==null)
                             <li class="slash"><a href="/public/sub-categories/{{ $data->categoryId }}">{{ $data->categoryName }}</a></li>
                         @endif
                         <li class="slash"><a href="#" id="product-image-color">{{ $data->name }}</a></li>
-
                     </ul>
                 </nav>
 
-            </div>
-
+            </div> 
         </div>
 
     </section>
 
 
     <!-- SECTION 2 -->
-    <section class="section-two">
+    <section class="section-two product-image-details">
         <div class="custom-container">
             <div class="detail-custom-container">
 
@@ -86,7 +78,7 @@
 
                     </div>
 
-                    <div class="align-items">
+                    <div class="align-items card-actions">
                         <div class="product-num">
                             <i class="fa-solid fa-minus iconplus"></i>
                             @csrf
@@ -152,6 +144,7 @@
 
 
     <!-- Suggested products -->
+    @if(count($data->others)>0)
     <section class="product-slider">
         <div class="custom-container">
 
@@ -178,7 +171,7 @@
 
         </div>
     </section>
-
+    @endif
 
 
 

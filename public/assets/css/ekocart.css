@@ -720,6 +720,11 @@ table td {
     margin-top: 15px;
 }
 
+.product-name-and-breadcrumb>div {
+    justify-content: space-around;
+    margin-left:5%
+}
+
 /* .product-slider .addition-offers .owl-nav {
     display: block !important;
 } */
