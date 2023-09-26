@@ -12,14 +12,19 @@ class SpecificationController extends Controller
     public function list(Request $request) {
 
         $paging = "";
+        $sql = "";
+
+        if($request->name) {
+            $sql .= " and s.name like "."'$request->name%'";
+        }
 
         if(isset($request->limit) && isset($request->offset)) {
             $paging = " LIMIT ".$request->limit." OFFSET ".$request->offset*10;
         } 
 
-        $all = $datas = DB::select("select s.id from specifications s where s.is_deleted=0"); 
+        $all = $datas = DB::select("select s.id from specifications s where s.is_deleted=0".$sql); 
 
-        $datas = DB::select("select s.id, s.name from specifications s where s.is_deleted=0".$paging); 
+        $datas = DB::select("select s.id, s.name from specifications s where s.is_deleted=0".$sql.$paging); 
   
 
         return response()->json([
