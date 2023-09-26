@@ -25,13 +25,9 @@ class ProductController extends Controller
         }
 
         if($request->name) {
-            $sql .= " and p.name=".$request->name;
+            $sql .= " and p.name like "."'$request->name%'";
         }
-
-        if($request->name) {
-            $sql .= " and p.name=".$request->name;
-        }
-
+   
         if($request->parentCategoryId) {
             $sql .= " and p.parent_category_id=".$request->parentCategoryId;
         }
@@ -59,18 +55,32 @@ class ProductController extends Controller
             p.star, p.created_at from products p left join sub_categories c on p.category_id=c.id left join menus m on p.menu_id=m.id
             where p.is_deleted=0".$sql." order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]);
 
+        
+        $products = [];
+
         foreach($datas as $key => $data) {
+
+            $checkCompany = "";
+
+            if($request->companyId) {
+                $checkCompany = " and r.company_id=".$request->companyId;
+            } 
+
             $data->companies = DB::select("select r.id, c.name, r.price as price, r.percentage as percentage from
-                product_company_relations r inner join companies c on r.company_id=c.id where r.product_id=? and r.is_deleted=0", [$data->id]);
-            // if($request->companyId && count($data->companies)===0) {  unset($datas[$key]);  }
+                product_company_relations r inner join companies c on r.company_id=c.id where r.product_id=? 
+                and r.is_deleted=0".$checkCompany, [$data->id]);
+
+            if(!($request->companyId && count($data->companies)===0)) { 
+                array_push($products, $data); 
+            }
         }
 
-        foreach($datas as $data) {
+        foreach($products as $data) {
             $data->specifications = DB::select("select p.id, s.name, p.value from product_specification_relations p
             inner join specifications s on p.specification_id=s.id where p.product_id=? and p.is_deleted=0", [$data->id]);
         }
 
-        foreach($datas as $data) {
+        foreach($products as $data) {
             $data->values = DB::select("select p.id, g.name, t.name as type from product_value_relations p
             inner join general_values g on p.value_id=g.id inner join types t on g.type_id=t.id
             where p.product_id=? and p.is_deleted=0", [$data->id]);
@@ -79,7 +89,7 @@ class ProductController extends Controller
         // dd($datas);
 
         return response()->json([
-            'data' => ["products"=>$datas, "totalCount"=>count($allProducts)],
+            'data' => ["products"=>$products, "totalCount"=>count($allProducts)],
             'error' => null,
         ]);
 
