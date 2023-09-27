@@ -128,6 +128,114 @@ class ProductController extends Controller
 
     }
 
+    public function dublicateById($id) {
+
+
+        $productInfo = Products::find($id);
+ 
+
+        $oldSpecifications = DB::select("select specification_id, value from product_specification_relations
+                                            where product_id=? and is_deleted=0", [$id]);
+
+        $oldValues = DB::select("select value_id from product_value_relations where product_id=? and is_deleted=0", [$id]);
+
+        $oldImages = DB::select("select name from product_images where product_id=? and is_deleted=0", [$id]);
+
+        $oldCompanies = DB::select("select company_id, price, percentage from product_company_relations 
+                                        where product_id=? and is_deleted=0", [$id]);
+
+        if($productInfo !==null) {
+ 
+
+            $newProduct = new Products();
+
+            $newProduct->name = "Dublikat ".$newProduct->id." - ".$productInfo->name;
+            $newProduct->description = $productInfo->description;
+            $newProduct->price = $productInfo->price;
+            $newProduct->discount = $productInfo->discount;
+            $newProduct->category_id = $productInfo->category_id;
+            $newProduct->parent_category_id = $productInfo->parent_category_id;
+            $newProduct->menu_id = $productInfo->menu_id;
+            $newProduct->isFront = 0;
+            $newProduct->uuid = (string) Str::uuid();
+            $newProduct->warranty = $productInfo->warranty;
+
+            if($newProduct->save()) {
+
+                if(count($oldSpecifications)>0) {
+
+                    $specifications = [];
+                    foreach ($oldSpecifications as $item)
+                    { 
+                        array_push($specifications, [
+                            'specification_id' => $item->specification_id,
+                            'value' => $item->value,
+                            'product_id' => $newProduct->id
+                        ]);
+                    } 
+
+                    DB::table('product_specification_relations')->insert($specifications);
+                }
+                
+                if(count($oldValues)) {
+
+                    $values = [];
+                    foreach ($oldValues as $item)
+                    { 
+                        array_push($values, [
+                            'value_id' => $item->value_id, 
+                            'product_id' => $newProduct->id
+                        ]);
+                    } 
+
+                    DB::table('product_value_relations')->insert($values);
+
+                }
+
+                if(count($oldImages)) {
+
+                    $images = [];
+                    foreach ($oldImages as $item)
+                    { 
+                        array_push($images, [
+                            'name' => $item->name, 
+                            'product_id' => $newProduct->id
+                        ]);
+                    } 
+
+                    DB::table('product_images')->insert($images);
+
+                }
+
+                if(count($oldCompanies)) {
+
+                    $companies = [];
+                    foreach ($oldCompanies as $item)
+                    { 
+                        array_push($companies, [
+                            'company_id' => $item->company_id, 
+                            'price' => $item->price, 
+                            'percentage' => $item->percentage, 
+                            'product_id' => $newProduct->id
+                        ]);
+                    } 
+
+                    DB::table('product_company_relations')->insert($companies);
+
+                }
+
+            }
+
+        }
+
+
+        return response()->json([
+            'data' => $productInfo,
+            'error' => null,
+        ]);
+
+    }
+
 
     public function setStatus(Request $request) {
 

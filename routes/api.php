@@ -66,6 +66,7 @@ use App\Http\Controllers\SubscriberController;
     $router->post('/product-image', [ProductController::class, 'upload']);
     $router->get('/product-images/{id}', [ProductController::class, 'imageList']);
     $router->delete('/product-image/{id}', [ProductController::class, 'deleteImage']);
+    $router->get('/product-dublicate/{id}', [ProductController::class, 'dublicateById']);
 
     $router->get('/replace-category', [ProductController::class, 'replaceCategory']);
 
