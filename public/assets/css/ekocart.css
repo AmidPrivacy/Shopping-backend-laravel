@@ -724,10 +724,7 @@ table td {
     justify-content: space-around;
     margin-left:5%
 }
-
-/* .product-slider .addition-offers .owl-nav {
-    display: block !important;
-} */
+ 
 
 .product-slider .addition-offers .owl-nav button {
     position: absolute; 
@@ -750,15 +747,13 @@ table td {
     right: -100px;
 }
 
-
-
+ 
 /* FOOTER */
 footer {
     background-color: #042825;
     padding: 45px 0 30px;
-    margin-top: 50px;
-}
-
+    margin-top: 0;
+} 
 
 footer h5 {
     color: gray;
