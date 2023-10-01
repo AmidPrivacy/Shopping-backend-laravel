@@ -48,12 +48,12 @@ class ProductController extends Controller
             $sql .= " and p.menu_id=".$request->menuId;
         }
 
-
         $allProducts = DB::select("select p.id from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0".$sql);
 
-        $datas = DB::select("select p.id, p.uuid, p.name, p.isFront, m.name as menu, p.description, p.price, p.discount, c.name as category, p.warranty,
-            p.star, p.created_at from products p left join sub_categories c on p.category_id=c.id left join menus m on p.menu_id=m.id
-            where p.is_deleted=0".$sql." order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]);
+        $datas = DB::select("select p.id, p.uuid, p.name, p.is_best_selling as bestSelling, p.is_popular as isPopular, m.name as menu, p.description, 
+                            p.price, p.discount, c.name as category, p.warranty, p.star, p.created_at from products p left join sub_categories c 
+                            on p.category_id=c.id left join menus m on p.menu_id=m.id
+                            where p.is_deleted=0".$sql." order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]);
 
         
         $products = [];
@@ -156,7 +156,7 @@ class ProductController extends Controller
             $newProduct->category_id = $productInfo->category_id;
             $newProduct->parent_category_id = $productInfo->parent_category_id;
             $newProduct->menu_id = $productInfo->menu_id;
-            $newProduct->isFront = 0;
+            $newProduct->is_best_selling = 0;
             $newProduct->uuid = (string) Str::uuid();
             $newProduct->warranty = $productInfo->warranty;
 
@@ -278,7 +278,14 @@ class ProductController extends Controller
     public function setHomeStatus(Request $request) {
 
         $product = Products::find($request->id);
-        $product->isFront = $request->status;
+
+        if(!$request->isPopular) {
+            $product->is_best_selling = $request->status;
+        } else {
+            $product->is_popular = $request->status;
+        }
+
+        // return [$product];
 
         if($product->save()) {
             return response()->json([

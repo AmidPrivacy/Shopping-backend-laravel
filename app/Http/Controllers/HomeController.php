@@ -31,13 +31,19 @@ class HomeController extends Controller
 
         $centers = DB::select("select picture from centers where is_deleted=0 and picture IS NOT NULL");
 
-        $products = DB::select("select id, uuid, name, price from products where is_deleted=0 and isFront=1");
+        $bestSelling = DB::select("select id, uuid, name, price from products where is_deleted=0 and is_best_selling=1");
+        $popularProducts = DB::select("select id, uuid, name, price from products where is_deleted=0 and is_popular=1");
 
-        foreach($products as $product) { 
+        foreach($bestSelling as $product) { 
             $product->images = DB::select("select name from product_images where product_id=? and is_deleted=0", [$product->id]);
         }
- 
-        return view('home')->with(['data'=>[], "menus"=>$menus, "centers"=>$centers, "products"=>$products]); 
+
+        foreach($popularProducts as $product) { 
+            $product->images = DB::select("select name from product_images where product_id=? and is_deleted=0", [$product->id]);
+        }
+  
+        return view('home')->with(['data'=>[], "menus"=>$menus, "centers"=>$centers, 
+                                "bestSelling"=>$bestSelling, "populars"=>$popularProducts]); 
 
     }
 

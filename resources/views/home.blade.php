@@ -114,7 +114,7 @@
 
 
             <div class="product-box">
-                @foreach($products as $key => $product)
+                @foreach($bestSelling as $key => $product)
                     @if(count($product->images)>0)
                     <div class="product-item">
                         <img src="uploads/products/{{ $product->images[0]->name }}" alt="">
@@ -156,7 +156,7 @@
   
                     <!-- <i class="fa-solid fa-chevron-left"></i> -->
                     <div class="product-box"> 
-                        @foreach($products as $key => $product)
+                        @foreach($populars as $key => $product)
                             @if(count($product->images)>0)
                             <div class="product-item">
                                 <img src="uploads/products/{{ $product->images[0]->name }}" alt=""> 
