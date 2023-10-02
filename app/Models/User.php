@@ -12,6 +12,14 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+
+    public const ROLES = [
+        1 => 'Super admin',
+        2 => 'Anbar admini',
+        3 => 'Mərkəz admini',
+        4 => 'Operator'
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -41,4 +49,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public static function boot() {
+    parent::boot();
+    self::creating(function ($model) {
+        $model->referral_code = (string) random_int(100000, 999999);
+    });
+}
 }

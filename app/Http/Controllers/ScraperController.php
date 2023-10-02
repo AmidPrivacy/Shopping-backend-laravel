@@ -27,6 +27,7 @@ class ScraperController extends Controller
                 'error' => ["message"=>$th->getMessage()],
             ]);
         }
+        return $data;
         $catIds = explode('_', $request->input('category'));
         $parentCatId = $catIds[0];
         $childCatId = isset($catIds[1]) ? $catIds[1] : null;
