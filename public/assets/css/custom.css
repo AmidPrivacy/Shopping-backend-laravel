@@ -24,7 +24,7 @@
 }
 
 .product-preview-carousel img {
-    height: 650px;
+    height: auto;
     object-fit: cover;
 }
 
@@ -95,6 +95,9 @@ div p {
     margin-top: 140px;
 }
 
+.section-page-two .section-div-h5 {
+    margin-bottom: 20px;
+}
 
 
 /* SECTION-PRODUCTS */

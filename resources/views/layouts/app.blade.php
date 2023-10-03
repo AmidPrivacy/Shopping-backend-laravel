@@ -75,41 +75,7 @@
                 <!-- navbar -->
                 <div class="navbar-layer"> 
                     <nav>
-                        <ul>
-
-                            <li> <a href="/">Əsas səhifə</a> </li>
-
-                            @foreach($menus as $key => $menu)
-                            <li>
-                                <a href="{{ $menu->is_product===0 ? '#' : '/special-products/'.$menu->uuid }}">{{ $menu->name }}</a> 
-                                @if(count($menu->categories)>0)
-                                <i class="fa-solid fa-chevron-down icon-down"></i>
-                                <div class="under-menu-box">
-                                    @foreach($menu->categories as  $category)
-                                    <div class="main-category-item">
-                                        <a href="/categories/{{ $category->uuid }}">
-                                            {{ $category->name }}
-                                            @if(count($category->subs)>0)
-                                                <i class="fa-solid fa-chevron-right icon-down"></i>
-                                            @endif
-                                        </a>
-                                        @if(count($category->subs)>0)
-                                        <i class="fa-solid fa-chevron-right icon-down"></i>
-                                        <div class="sub-category-box">
-                                            @foreach($category->subs as  $sub)
-                                                <a href="/sub-categories/{{ $sub->uuid }}">{{ $sub->name }}</a>
-                                            @endforeach
-                                        </div>
-                                        @endif
-                                    </div> 
-                                    
-                                    @endforeach
-                                </div>
-                                @endif
-                            </li>
-                            @endforeach
-                            
-                        </ul>
+                        @include('layouts.menu')
                     </nav>
  
                     <div class="navbar-icons">  
@@ -127,6 +93,13 @@
         </div>
 
     </header>
+
+    <section class="mobile-menu">
+        <div class="mobile-toggle">
+            <i class="fa-solid fa-close"></i>
+        </div>
+        @include('layouts.menu')
+    </section>
   
     @yield('content') 
 
@@ -342,19 +315,53 @@
 
             loadCartCount();
 
-
             $(".card-shopping-details").click(function (e) { loadCartProducts() });
             $(document).on("click", ".basket-product-description button", function (e) { 
                 
                 deleteCartItem($(this).attr("id"), false); 
             });
 
-
             $(".header-brand .mobile-toggle").click(function(){
-                if($("header").hasClass('mobile-menu')) {
-                    $("header").removeClass("mobile-menu")
-                } else {
-                    $("header").addClass("mobile-menu")
+
+                $(".mobile-menu").addClass("active-menu")
+              
+            });
+
+            $(".mobile-menu .mobile-toggle").click(function(){
+                $(".mobile-menu").removeClass("active-menu")
+            })
+
+
+            $(".mobile-menu ul>li").click(function() {
+                const icon = $(this).children("i");
+
+                if(icon.hasClass("fa-chevron-down")) {
+                    icon.removeClass("fa-chevron-down");
+                    icon.addClass("fa-chevron-up");
+                    $(this).find(".under-menu-box").fadeIn();
+                } else { 
+                    icon.removeClass("fa-chevron-up");
+                    icon.addClass("fa-chevron-down");
+                    $(this).find(".under-menu-box").fadeOut();
+                }
+            });
+
+            $(".mobile-menu ul li .under-menu-box").click(function(e) {
+                e.stopPropagation(); 
+            })
+
+            $(".mobile-menu ul li .main-category-item").click(function() {
+
+                const icon = $(this).children("i");
+
+                if(icon.hasClass("fa-chevron-down")) {
+                    icon.removeClass("fa-chevron-down");
+                    icon.addClass("fa-chevron-up");
+                    $(this).find(".sub-category-box").fadeIn();
+                } else { 
+                    icon.removeClass("fa-chevron-up");
+                    icon.addClass("fa-chevron-down");
+                    $(this).find(".sub-category-box").fadeOut();
                 }
             })
 

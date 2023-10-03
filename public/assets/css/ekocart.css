@@ -224,7 +224,7 @@ header nav ul li .fa-chevron-down {
     display: contents;
 }
 
-header nav ul li .under-menu-box {
+header nav ul li .under-menu-box, .mobile-menu ul li .under-menu-box {
     display: none;
     background-color: #fff;
     border-radius: 10px;
@@ -237,7 +237,7 @@ header nav ul li .under-menu-box {
     margin-left: -5px;
 }
 
-header nav ul li .under-menu-box .sub-category-box {
+header nav ul li .under-menu-box .sub-category-box, .mobile-menu ul li .under-menu-box .sub-category-box {
     position: absolute;
     background-color: #FF5722;
     margin-left: 92%;
@@ -994,4 +994,84 @@ input[type=number] {
 
 .filter-and-products .filter-action {
     display: none;
+}
+
+
+.mobile-menu {
+    position: absolute;
+    top: 0;
+    background-color: white;
+    z-index: 1000;
+    width: 100%;
+    min-height: 100vh;
+    display: none;
+    box-shadow: 0px 1px 13px 5px #ccc;
+}
+
+.mobile-menu.active-menu {
+    display: block;
+}
+
+.mobile-menu .mobile-toggle {
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px; 
+    font-size: 24px;
+    position: absolute;
+    right: 5px;
+}
+
+.mobile-menu ul {
+    list-style: none;
+    padding-top: 36px;
+}
+
+.mobile-menu ul li {
+    margin-top: 12px;
+}
+
+.mobile-menu ul a {
+    text-decoration: none;
+    color: #000000;
+}
+
+.mobile-menu ul li .under-menu-box {
+    position: relative;
+    margin-top: 5px;
+    width: 96%;
+}
+
+.mobile-menu ul li .main-category-item {
+
+}
+
+.mobile-menu ul li .main-category-item>a>i {
+    display: none;
+}
+
+.mobile-menu ul li .main-category-item>i {
+    position: absolute;
+    margin-top: 8px;
+    right: 19px;
+    width: 19px;
+    font-size: 9px;
+    padding-left: 4px;
+    height: 19px;
+    line-height: 19px;
+    background-color: #fe4c1c;
+    border-radius: 50%;
+    color: #fff;
+}
+
+.mobile-menu ul li .under-menu-box .sub-category-box {
+    display: none;
+    position: relative; 
+    margin-left: 0;
+    margin-top: 10px;
+}
+
+.mobile-menu ul li .under-menu-box .sub-category-box a {
+    display: block;
+    color: #fff;
 }
