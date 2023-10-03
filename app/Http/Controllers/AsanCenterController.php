@@ -20,7 +20,7 @@ class AsanCenterController extends Controller
         }
 
         $all = DB::select("select id from asan_centers where is_deleted=0");
-        $datas = DB::select("select id, name, picture from asan_centers where is_deleted=0".$paging);
+        $datas = DB::select("select id, name from asan_centers where is_deleted=0".$paging);
 
         return response()->json([
             'data' => ["centers"=>$datas, "totalCount"=>count($all)],

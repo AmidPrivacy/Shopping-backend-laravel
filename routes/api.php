@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AsanCenterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -146,6 +147,12 @@ use App\Http\Controllers\SubscriberController;
 
     $router->get('/floors', [CenterController::class, 'floorList']);
     $router->get('/statistic-datas', [StatisticController::class, 'index']);
+
+    //Asan center apis
+    $router->get('/asan-centers', [AsanCenterController::class, 'list']);
+    $router->get('/asan-center/{id}', [AsanCenterController::class, 'getById']);
+    $router->post('/asan-center', [AsanCenterController::class, 'add']);
+    $router->put('/asan-center-status', [AsanCenterController::class, 'setStatus']);
 
     //Order apis
     $router->get('/orders', [OrderController::class, 'list']);
