@@ -142,22 +142,9 @@
                             
                         </ul>
                     </div>
-                </div>
-                <div class="col-md-3 footer-top">
-                    <div class="second-info" id="info">
-                        <h2>Keçid linkləri</h2>
-                        <ul class="li-style">
-                        @foreach($menus as $key => $menu)
-                            @if($key<=5)
-                            <li><a href="">{{ $menu->name }}</a></li>
-                            @endif
-                        @endforeach
-                        </ul>
-
-                    </div>
-                </div>
+                </div> 
                 
-                <div class="col-md-3 footer-top">
+                <div class="col-md-4 offset-md-2 footer-top">
                     <div class="second-info" id="info">
                         <h2>Özəlliklər</h2>
                         <ul class="li-style">
