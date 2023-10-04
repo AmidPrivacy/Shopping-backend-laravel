@@ -25,7 +25,7 @@
                             <input type="hidden" name="items[{{$key}}][quantity]" value="{{ $data['item_quantity'] }}">
                             @endforeach
                             <div class="form-floating mb-3">
-                                <input type="text" name="fullname" class="form-control" id="fullName" placeholder="" maxlength="35"
+                                <input type="text" name="fullName" class="form-control" id="fullName" placeholder="" maxlength="35"
                                     required>
                                 <label for="fullName">Ad Soyad</label>
                                 <div class="invalid-feedback">

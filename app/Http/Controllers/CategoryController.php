@@ -14,13 +14,18 @@ class CategoryController extends Controller
     public function categoryList(Request $request) {
 
         $paging = "";
+        $sql = "";
+
+        if($request->name) {
+            $sql .= " and c.name like "."'$request->name%'";
+        }
 
         if(isset($request->limit) && isset($request->offset)) {
             $paging = " LIMIT ".$request->limit." OFFSET ".$request->offset*10;
         }
 
-        $all = DB::select("select c.id from categories c left join menus m on c.menu_id=m.id where c.is_deleted=0");
-        $datas = DB::select("select c.id, c.name, picture, m.name as menu from categories c left join menus m on c.menu_id=m.id where c.is_deleted=0 order by c.id desc".$paging);
+        $all = DB::select("select c.id from categories c left join menus m on c.menu_id=m.id where c.is_deleted=0".$sql);
+        $datas = DB::select("select c.id, c.name, picture, m.name as menu from categories c left join menus m on c.menu_id=m.id where c.is_deleted=0".$sql." order by c.id desc".$paging);
 
         foreach($datas as $data) {
             $data->subCategories = DB::select("select id, name from sub_categories where category_id=? and is_deleted=0", [$data->id]);

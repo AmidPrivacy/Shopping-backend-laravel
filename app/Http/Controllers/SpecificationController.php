@@ -22,7 +22,7 @@ class SpecificationController extends Controller
             $paging = " LIMIT ".$request->limit." OFFSET ".$request->offset*10;
         } 
 
-        $all = $datas = DB::select("select s.id from specifications s where s.is_deleted=0".$sql); 
+        $all = DB::select("select s.id from specifications s where s.is_deleted=0".$sql); 
 
         $datas = DB::select("select s.id, s.name from specifications s where s.is_deleted=0".$sql.$paging); 
   

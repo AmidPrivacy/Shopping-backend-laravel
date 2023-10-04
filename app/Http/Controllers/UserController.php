@@ -78,18 +78,7 @@ class UserController extends Controller
  
     }
 
-    public function getTeachersBySubjectId($id) {
-
-        $userInfo = DB::select("select u.id, u.name from users u where u.status=1 and u.subject_id IN(?)",[$id]);
- 
-        return response()->json([
-            'data' => $userInfo,
-            'error' => null,
-        ]);
- 
-    }
-
-
+   
     public function getByRole(REQUEST $request) {
  
         $users = DB::select("select u.id, u.name, u.email, u.number, u.driving_license, u.picture, u.car_number,
@@ -138,17 +127,19 @@ class UserController extends Controller
         }
     }
 
-    public function update($id, Request $request) {
+    public function update(Request $request) {
 
-        $user = User::find($id);
+        $user = User::find($request->id);
 
         $user->name = $request->name;
         $user->email  = $request->email ;
-        $user->number = $request->number;
-        $user->driving_license = $request->drivingLicense;
-        $user->car_number = $request->carNumber;
+        $user->number = $request->phone; 
         $user->address = $request->address;
         $user->role = $request->role;
+ 
+        if($user->referral_code ===null && $user->role==4) {
+            $user->referral_code = (string) random_int(100000, 999999);
+        }
         
         if($user->save()) {
             return response()->json([
