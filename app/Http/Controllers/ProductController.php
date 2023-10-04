@@ -17,8 +17,7 @@ class ProductController extends Controller
         $limit = isset($request->limit) ? $request->limit : 10;
         $offset = isset($request->offset) ? $request->offset*10 : 0;
 
-        $sql = "";
-        $companySql = "";
+        $sql = ""; 
 
         if($request->id) {
             $sql .= " and p.id=".$request->id;
@@ -48,8 +47,9 @@ class ProductController extends Controller
             $sql .= " and p.menu_id=".$request->menuId;
         }
 
-        $allProducts = DB::select("select p.id from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0".$sql);
+        $limit = $request->companyId || $request->isEmptySp || $request->isEmptyImg ? 1000 : $limit;
 
+        $allProducts = DB::select("select p.id from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0".$sql);
         $datas = DB::select("select p.id, p.uuid, p.name, p.is_best_selling as bestSelling, p.is_popular as isPopular, m.name as menu, p.description, 
                             p.price, p.discount, c.name as category, p.warranty, p.star, p.created_at from products p left join sub_categories c 
                             on p.category_id=c.id left join menus m on p.menu_id=m.id
@@ -75,7 +75,7 @@ class ProductController extends Controller
             }
         }
 
-        foreach($products as $data) {
+        foreach($products as $key => $data) {
             $data->specifications = DB::select("select p.id, s.name, p.value from product_specification_relations p
             inner join specifications s on p.specification_id=s.id where p.product_id=? and p.is_deleted=0", [$data->id]);
         }
@@ -86,10 +86,29 @@ class ProductController extends Controller
             where p.product_id=? and p.is_deleted=0", [$data->id]);
         }
 
-        // dd($datas);
+        foreach($products as $data) {
+            $data->images = DB::select("select name from product_images where product_id=? and is_deleted=0", [$data->id]);
+        }
+
+
+        $filterBySp = array_filter($products, static function ($element) {
+ 
+            GLOBAL $request; 
+            return !($request->isEmptySp==true && count($element->specifications)>0); 
+
+        });
+
+        $filterByImage = array_filter($filterBySp, static function ($element) {
+ 
+            GLOBAL $request;  
+            return !($request->isEmptyImg==true && count($element->images)>0);
+
+        });
+
+        // dd($products);
 
         return response()->json([
-            'data' => ["products"=>$products, "totalCount"=>count($allProducts)],
+            'data' => ["products"=>[...$filterByImage], "totalCount"=>count($allProducts)],
             'error' => null,
         ]);
 
