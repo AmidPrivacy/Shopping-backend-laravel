@@ -147,7 +147,8 @@ class UserController extends Controller
         $user->number = $request->number;
         $user->driving_license = $request->drivingLicense;
         $user->car_number = $request->carNumber;
-        $user->address = $request->address; 
+        $user->address = $request->address;
+        $user->role = $request->role;
         
         if($user->save()) {
             return response()->json([

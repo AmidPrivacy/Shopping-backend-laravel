@@ -64,6 +64,10 @@ class AsanCenterController extends Controller
 
     public function add(Request $request) {
 
+        if($request->id) {
+            return $this->update($request->id, $request);
+        }
+
         $center = new AsanCenters;
 
         $center->name = $request->name;

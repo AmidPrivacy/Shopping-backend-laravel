@@ -32,6 +32,7 @@ class AuthController extends Controller
             "address" => "required|string|max:120", 
             "phone" => "required|string|max:18",
             "password" => "required|string|min:6",
+            "role" => 'required|in:1,2,3,4'
         ]);
  
         try {
@@ -42,10 +43,11 @@ class AuthController extends Controller
             $user->address = $request->input("address");  
             $plainPassword = $request->input("password");
             $user->password = app("hash")->make($plainPassword);
+            $user->role = $request->input('role');
             $user->save(); 
             return response()->json(["user" => $user, "message" => "CREATED"], 201);
         } catch (\Exception $e) {
-            return response()->json(["message" => "User Registration Failed!"], 409);
+            return response()->json(["message" => "User Registration Failed!", "error" => $e->getMessage()], 409);
         }
     }
 
@@ -111,6 +113,7 @@ class AuthController extends Controller
             'access_token' => auth()->user()->is_actived===1 ? $token : null,
             'role' => auth()->user()->role,
             'user' => auth()->user()->status===1 ? auth()->user()->name : null,
+            'referral_code' => auth()->user()->referral_code,
             // 'expires_in' => auth()->factory()->getTTL() * 60 * 24
         ]);
     }

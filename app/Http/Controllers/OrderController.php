@@ -92,6 +92,7 @@ class OrderController extends Controller
         $order->email = $request->mail;
         $order->address = $request->address;
         $order->note = $request->note;
+        $order->referral_code = $request->referral_code;
         $order->uuid = (string) Str::uuid();
 
         if($order->save()) {

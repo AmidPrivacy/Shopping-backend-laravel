@@ -54,7 +54,16 @@ class User extends Authenticatable
     public static function boot() {
     parent::boot();
     self::creating(function ($model) {
-        $model->referral_code = (string) random_int(100000, 999999);
+        if($model->role == 4) {
+            $model->referral_code = (string) random_int(100000, 999999);
+        }
     });
+    
 }
+
+// public function getRoleAttribute($value) {
+//     return ['name' => self::ROLES[$value], 'value' => $value];
+// }
+
+
 }

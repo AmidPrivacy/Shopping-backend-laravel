@@ -56,12 +56,19 @@
                                     Zəhmət olmasa ünvan daxil edin.
                                 </div>
                             </div>
-                            <div class="form-floating">
+                            <div class="form-floating mb-3">
                                 <textarea name="note" class="form-control" placeholder="Qeyd əlavə edin" id="note" style="height: 100px" maxlength="335"
                                     required></textarea>
                                 <label for="note">Qeyd</label>
                                 <div class="invalid-feedback">
                                     Zəhmət olmasa qeyd daxil edin.
+                                </div>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" name="referral_code" class="form-control" id="referralCode" placeholder="" maxlength="6">
+                                <label for="fullName">Dəvət kodu</label>
+                                <div class="invalid-feedback">
+                                    Zəhmət olmasa kodu daxil edin.
                                 </div>
                             </div>
                         </form>
@@ -191,13 +198,17 @@
                     number: "",
                     mail: "",
                     address: "",
-                    note: ""
+                    note: "",
+                    referral_code: "",
                 }
 
                 var isValid = true;
 
                 $(".form-floating").each(function() {
                     const inpTag = $(this).find(".form-control");
+                    if(undefined === inpTag.attr('required')) {
+                        return;
+                    }
 
                     if (inpTag.val().length > 0) {
                         data[inpTag.attr("id")] = inpTag.val();
