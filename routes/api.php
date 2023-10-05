@@ -50,7 +50,7 @@ use App\Http\Controllers\SubscriberController;
     $router->get('/user-roles', [UserController::class, 'userRoleList']);
     $router->get('/teachers/{id}', [UserController::class, 'getTeachersBySubjectId']);
     $router->put('/user-status', [UserController::class, 'setStatus']);
-    $router->put('/user-update', [UserController::class, 'update']); 
+    $router->put('/user-update', [UserController::class, 'update']);
     $router->post('/subuser', [UserController::class, 'addSubUser']);
     $router->put('/subuser', [UserController::class, 'updateSubUser']);
 
@@ -158,9 +158,10 @@ use App\Http\Controllers\SubscriberController;
     $router->get('/orders', [OrderController::class, 'list']);
     $router->get('/order/{id}', [OrderController::class, 'getById']);
     $router->put('/order-status', [OrderController::class, 'setStatus']);
+    $router->get('/order/{id}/detail', [OrderController::class, 'getOrderDetail']);
 
     //Subscriber apis
-    Route::get('/subscribers', [SubscriberController::class, 'index']); 
+    Route::get('/subscribers', [SubscriberController::class, 'index']);
     Route::post('/add-subscriber', [SubscriberController::class, 'addSubscriber']);
 
 
@@ -168,4 +169,4 @@ use App\Http\Controllers\SubscriberController;
     $router->post('/scraper', ScraperController::class);
 
 
-    
+

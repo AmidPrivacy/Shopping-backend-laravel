@@ -99,7 +99,7 @@ class OrderController extends Controller
             $relations = [];
 
             $cart_data = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', Cookie::get('shopping_cart')), true );
-   
+
             // foreach ($request->items as $item)
             foreach ($cart_data as $item)
             {
@@ -240,5 +240,21 @@ class OrderController extends Controller
         }
         return response()->json($response);
     }
+
+
+
+
+    public function getOrderDetail($id) {
+
+        $orderInfo = Orders::find($id);
+
+        $orderInfo->items = DB::select("select * from order_items where is_deleted=0 and order_id=?", [$id]);
+
+        return response()->json([
+            'data' => $orderInfo,
+            'error' => null,
+        ]);
+
+     }
 
 }
