@@ -156,9 +156,10 @@ use App\Http\Controllers\SubscriberController;
     $router->get('/orders', [OrderController::class, 'list']);
     $router->get('/order/{id}', [OrderController::class, 'getById']);
     $router->put('/order-status', [OrderController::class, 'setStatus']);
+    $router->get('/order/{id}/detail', [OrderController::class, 'getOrderDetail']);
 
     //Subscriber apis
-    Route::get('/subscribers', [SubscriberController::class, 'index']); 
+    Route::get('/subscribers', [SubscriberController::class, 'index']);
     Route::post('/add-subscriber', [SubscriberController::class, 'addSubscriber']);
 
 
@@ -166,4 +167,4 @@ use App\Http\Controllers\SubscriberController;
     $router->post('/scraper', ScraperController::class);
 
 
-    
+
