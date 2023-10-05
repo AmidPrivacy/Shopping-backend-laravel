@@ -154,91 +154,7 @@ class UserController extends Controller
         }
     }
 
-    public function addSubUser(Request $request) {
-
-        $user = new SubUsers;
-
-        $user->user_id = $request->id;
-        $user->name = $request->name;
-        $user->email  = $request->email ;
-        $user->number = $request->phone;
-        $user->driving_license = $request->driving_license;
-        $user->car_number = $request->carNumber;
-        $user->address = $request->address; 
-        
-        if($user->save()) {
-            return response()->json([
-                'data' => ["message"=>"istifadəçinin məlumatları sistemə əlavə olundu"],
-                'error' => null,
-            ]);
-        } else {
-            return response()->json([
-                'data' => null,
-                'error' => ["message"=>"Sistem xətası"],
-            ]);
-        }
-
-    }
-
-    public function addChildrenToUser(Request $request) {
-
-        $relations = [];
-
-        $token = JWTAuth::getToken(); 
-        $user = JWTAuth::toUser($token);
-
-        foreach ($request->children as $item)
-        {     
-
-            array_push($relations, [
-                'user_id' => $request->userId,
-                'child_id' => $item,
-                'system_executor_id' => $user->id
-            ]);
-
-        }
-
-        $inserted = DB::table('user_children')->insert($relations);
-
-        if($inserted){
-            return response()->json([
-                'data' => ["message"=>"Uğurlu əməliyyat"],
-                'error' => null,
-            ]);
-        }  else {
-            return response()->json([
-                'data' => null,
-                'error' => ["message"=>"Sistem xətası"],
-            ]);
-        }
-
-    }
-
-    public function updateSubUser(Request $request) {
-
-        $user = SubUsers::find($request->userId);
- 
-        $user->name = $request->name;
-        $user->email  = $request->email ;
-        $user->number = $request->number;
-        $user->driving_license = $request->drivingLicense;
-        $user->car_number = $request->carNumber;
-        $user->address = $request->address; 
-        
-        if($user->save()) {
-            return response()->json([
-                'data' => ["message"=>"Seçilən istifadəçinin məlumatları yeniləndi"],
-                'error' => null,
-            ]);
-        } else {
-            return response()->json([
-                'data' => null,
-                'error' => ["message"=>"Sistem xətası"],
-            ]);
-        }
-
-    }
-
+   
     public function getNotificationsById($childIds) {
 
         $token = JWTAuth::getToken(); 
@@ -307,49 +223,7 @@ class UserController extends Controller
     public function userRoleList() {
         return ["ADMIN", "DAYE", "TAKSI", "VALIDEYN", "MUELLİM"];
     }
-
-    public function fetchChildren() {
-
-        $token = JWTAuth::getToken(); 
-        $user = JWTAuth::toUser($token);
-        
-        if($user->role !== null) {
-
-            $roleName = $user->role;
-
-            $users = null;
-
-            if($roleName === $this->userRoleList()[0] || $roleName === $this->userRoleList()[1] || $roleName === $this->userRoleList()[2]) {
-
-                $users = DB::select("select c.name, c.picture, c.id, c.birth_date from user_children u inner join children c on u.child_id=c.id 
-                where u.user_id=?", [$user->id]);
-
-                if(isset($users)) {
-                    foreach ($users as $key => $user) {
-                        $user->notificationCount = count(DB::select("select id from notifications where child_id=?", [$user->id]));
-                    }
-                }
-  
-            } elseif ($roleName === $this->userRoleList()[3]) {
-
-                $users = DB::select("select name, picture, birth_date from children where parent_id=?", [$user->id]);
-                
-            }
-
-            return response()->json([
-                'data' => $users,
-                'error' => $users===null ? ["message"=>"Sizin bu əməliyyata icazəniz yoxdur"] : null
-            ]); 
-
-        }
-
-        return response()->json([
-            'data' => null,
-            'error' => ["message"=>"Sizin bu əməliyyata icazəniz yoxdur"]
-        ]);
-         
-    }
-
+ 
     public function fetchObjects() {
 
         $objects = DB::select("select id, name from objects where status=1");
