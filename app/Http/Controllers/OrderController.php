@@ -250,6 +250,13 @@ class OrderController extends Controller
 
         $orderInfo->items = DB::select("select * from order_items where is_deleted=0 and order_id=?", [$id]);
 
+        $ids = (array_map(function($e) {
+            return $e->product_id;
+        }, $orderInfo->items));
+
+        $products =  DB::table('products')->whereIn('id', $ids)->where("is_deleted", 0)->get();
+        $orderInfo->products = $products;
+
         return response()->json([
             'data' => $orderInfo,
             'error' => null,
