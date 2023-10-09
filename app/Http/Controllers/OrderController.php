@@ -248,7 +248,7 @@ class OrderController extends Controller
 
         $orderInfo = Orders::find($id);
 
-        $orderInfo->items = DB::select("select * from order_items where is_deleted=0 and order_id=?", [$id]);
+        $orderInfo->items = DB::select("select p.id, p.name, p.price, p.uuid from order_items o inner join products p on o.product_id=p.id where o.is_deleted=0 and o.order_id=?", [$id]);
 
         return response()->json([
             'data' => $orderInfo,
