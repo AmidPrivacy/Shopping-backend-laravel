@@ -117,6 +117,10 @@ class CompanyController extends Controller
             $company->row_id = $request->rowId;  
         }
 
+        if($request->userId) {
+            $company->user_id = $request->userId;  
+        }
+
         if($request->addressId) {
             $company->address_id = $request->addressId;  
         }
@@ -215,6 +219,9 @@ class CompanyController extends Controller
 
         $school->name = $request->name;
         $school->address = $request->address;
+        if($request->userId) {
+            $school->user_id = $request->userId;  
+        }
         
         if($school->save()) {
             return response()->json([
