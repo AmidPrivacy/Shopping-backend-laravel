@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Http\Request; 
-use Illuminate\Support\Facades\DB; 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
 use App\Models\SubUsers;
@@ -26,7 +26,7 @@ class UserController extends Controller
     public function list(Request $request) {
 
         $query = "";
-   
+
         if(strlen($request->name)) {
             $query .= " and u.name like '%$request->name%' ";
         }
@@ -45,21 +45,21 @@ class UserController extends Controller
 
         if(strlen($request->carNumber)) {
             $query .= " and u.car_number like '%$request->carNumber%' ";
-        } 
+        }
 
         if(strlen($request->subject)) {
             $query .= " and s.name like '%$request->subject%' ";
-        } 
+        }
 
         if(strlen($request->role)) {
             $query .= " and u.role like '%$request->role%' ";
-        } 
- 
+        }
 
-       $users = DB::select("select u.id, u.name, u.email, u.number, 
+
+       $users = DB::select("select u.id, u.name, u.email, u.number,
                     u.picture, u.address, u.role from users u where u.status=1 ".$query);
-       
-  
+
+
         return response()->json([
             'data' => $users,
             'error' => null,
@@ -70,17 +70,17 @@ class UserController extends Controller
     public function getById($id) {
 
         $userInfo = User::find($id);
- 
+
          return response()->json([
              'data' => $userInfo,
              'error' => null,
          ]);
- 
+
     }
 
-   
+
     public function getByRole(REQUEST $request) {
- 
+
         $users = DB::select("select u.id, u.name, u.email, u.number, u.driving_license, u.picture, u.car_number,
                                                 u.address, u.role from users u where u.status=1 and u.role=?", [$request->role]);
 
@@ -88,14 +88,14 @@ class UserController extends Controller
             'data' => $users,
             'error' => null,
         ]);
- 
+
     }
-    
+
     public function addRole(Request $request) {
 
         $user = User::find($request->userId);
         $user->role = $request->role;
-        
+
         if($user->save()) {
             return response()->json([
                 'data' => ["message"=>"Seçilən istifadəçiyə icazə əlavə olundu"],
@@ -107,13 +107,13 @@ class UserController extends Controller
                 'error' => ["message"=>"Sistem xətası"],
             ]);
         }
-        
+
     }
 
     public function setStatus(Request $request) {
         $user = User::find($request->userId);
         $user->status = $request->status;
-        
+
         if($user->save()) {
             return response()->json([
                 'data' => ["message"=>"Seçilən istifadəçinin aktivliyi dəyişdirildi"],
@@ -133,14 +133,14 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->email  = $request->email ;
-        $user->number = $request->phone; 
+        $user->number = $request->phone;
         $user->address = $request->address;
         $user->role = $request->role;
- 
+
         if($user->referral_code ===null && $user->role==4) {
             $user->referral_code = (string) random_int(100000, 999999);
         }
-        
+
         if($user->save()) {
             return response()->json([
                 'data' => ["message"=>"Seçilən istifadəçinin məlumatları yeniləndi"],
@@ -154,10 +154,10 @@ class UserController extends Controller
         }
     }
 
-   
+
     public function getNotificationsById($childIds) {
 
-        $token = JWTAuth::getToken(); 
+        $token = JWTAuth::getToken();
         $user = JWTAuth::toUser($token);
 
         if($user->role !== null) {
@@ -170,8 +170,8 @@ class UserController extends Controller
                 $condition = " where child_id in (".$childIds.")";
             }
 
-            $notifications = DB::select("select n.id, c.name as child, u.name as responsible, o.name as object, t.name as type, n.latitude, 
-                n.longitude, n.created_at from notifications n inner join objects o on n.object_id = o.id inner join children 
+            $notifications = DB::select("select n.id, c.name as child, u.name as responsible, o.name as object, t.name as type, n.latitude,
+                n.longitude, n.created_at from notifications n inner join objects o on n.object_id = o.id inner join children
                 c on n.child_id = c.id inner join types t on n.type_id = t.id  inner join users u on n.user_id = u.id".$condition);
 
             if($roleName === $this->userRoleList()[1] || $roleName === $this->userRoleList()[2]) {
@@ -185,14 +185,14 @@ class UserController extends Controller
                     'error' => null,
                 ]);
             }
- 
+
         }
 
         return response()->json([
             'data' => null,
             'error' => ["message"=>"Sizin bu əməliyyata icazəniz yoxdur"]
         ]);
- 
+
     }
 
     public function addNotification(Request $request) {
@@ -223,14 +223,14 @@ class UserController extends Controller
     public function userRoleList() {
         return ["ADMIN", "DAYE", "TAKSI", "VALIDEYN", "MUELLİM"];
     }
- 
+
     public function fetchObjects() {
 
         $objects = DB::select("select id, name from objects where status=1");
         return response()->json([
             'data' => $objects,
             'error' => null
-        ]); 
+        ]);
     }
 
     public function sendOtp(Request $request) {
@@ -243,7 +243,7 @@ class UserController extends Controller
             $otp = new Otp();
             $otp->user_id = $user->id;
             $otp->code = rand ( 1000 , 9999 );
-            
+
             if($otp->save()) {
                 return response()->json([
                     'data' => "Kod göndərildi",
@@ -272,8 +272,8 @@ class UserController extends Controller
 
             $user = $users[count($users)-1];
 
-            $otp = Otp::where('user_id', '=', $user->id)->where('code', '=', $request->code)->where('status', '=', 0)->get(); 
-            
+            $otp = Otp::where('user_id', '=', $user->id)->where('code', '=', $request->code)->where('status', '=', 0)->get();
+
             if(count($otp)>0) {
 
                 $verifiedOtp = $otp[count($otp)-1];
@@ -285,26 +285,83 @@ class UserController extends Controller
                         'data' => "Qeydiyyat tamamlandı",
                         'error' => null,
                     ]);
-                }  
+                }
 
                 return response()->json([
                     'data' => null,
                     'error' => "Sistem xətası",
                 ]);
-                
+
             }
 
             return response()->json([
                 'data' => null,
                 'error' => "Kod tapılmadı, Zəhmət olmasa yendən kod göndərin",
-            ]); 
+            ]);
 
         }
 
         return response()->json([
             'data' => null,
             'error' => "Nömrə sistemdə tapılmadı",
-        ]); 
+        ]);
+
+    }
+
+
+
+
+    public function addTocompanies(Request $request) {
+
+        $user = User::find($request->userId);
+        $companyIds = $request->companyIds;
+        $insert_data = [];
+        foreach ($companyIds as $companyId) {
+            array_push($insert_data, [
+                'company_id' => $companyId,
+                'courier_id' => $user->id,
+            ]);
+        }
+        $inserted = DB::table('company_couriers')->insert($insert_data);
+
+        if($inserted) {
+            return response()->json([
+                'data' => ["message"=>"Seçilən mağazalar kuryerə əlavə olundu"],
+                'error' => null,
+            ]);
+        } else {
+            return response()->json([
+                'data' => null,
+                'error' => ["message"=>"Sistem xətası"],
+            ]);
+        }
+
+    }
+
+    public function addOrders(Request $request) {
+
+        $user = User::find($request->userId);
+        $orderIds = $request->orderIds;
+        $insert_data = [];
+        foreach ($orderIds as $orderId) {
+            array_push($insert_data, [
+                'order_id' => $orderId,
+                'courier_id' => $user->id,
+            ]);
+        }
+        $inserted = DB::table('company_couriers')->insert($insert_data);
+
+        if($inserted) {
+            return response()->json([
+                'data' => ["message"=>"Seçilən sifarişlər kuryerə əlavə olundu"],
+                'error' => null,
+            ]);
+        } else {
+            return response()->json([
+                'data' => null,
+                'error' => ["message"=>"Sistem xətası"],
+            ]);
+        }
 
     }
 

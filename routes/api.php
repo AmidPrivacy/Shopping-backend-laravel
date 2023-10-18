@@ -50,7 +50,9 @@ use App\Http\Controllers\SubscriberController;
     $router->get('/user-roles', [UserController::class, 'userRoleList']);
     $router->get('/teachers/{id}', [UserController::class, 'getTeachersBySubjectId']);
     $router->put('/user-status', [UserController::class, 'setStatus']);
-    $router->put('/user-update', [UserController::class, 'update']);  
+    $router->put('/user-update', [UserController::class, 'update']);
+    $router->put('/user-add-company', [UserController::class, 'addTocompanies']);
+    $router->put('/user-add-order', [UserController::class, 'addOrders']);
 
 
 
