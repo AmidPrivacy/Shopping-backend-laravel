@@ -59,9 +59,25 @@ class UserController extends Controller
        $users = DB::select("select u.id, u.name, u.email, u.number,
                     u.picture, u.address, u.role from users u where u.status=1 ".$query);
 
+        $companyCourierIds = collect($users)->filter(function($item) { return $item->role === 6;})->pluck('id');
+        $userCompanies = collect(DB::select("select GROUP_CONCAT(company_id) as company_list, courier_id from courier_companies where courier_id in (".implode(',', $companyCourierIds->toArray()).") group by courier_id"));
+
+        $orderCourierIds = collect($users)->filter(function($item) { return $item->role === 7;})->pluck('id');
+        $userOrders = collect(DB::select("select GROUP_CONCAT(order_id) as order_list, courier_id from courier_orders where courier_id in (".implode(',', $orderCourierIds->toArray()).") group by courier_id"));
+
+        $data = array_map(function($user) use($userCompanies, $userOrders) {
+            if(in_array($user->id, $userCompanies->pluck('courier_id')->toArray())) {
+                $user->companies = explode(',', $userCompanies->filter(function($item) use ($user) { return $item->courier_id === $user->id;})->pluck('company_list')->first());
+            }
+            if(in_array($user->id, $userOrders->pluck('courier_id')->toArray())) {
+                $user->orders = explode(',', $userOrders->filter(function($item) use ($user) { return $item->courier_id === $user->id;})->pluck('order_list')->first());
+            }
+            return $user;
+        }, $users);
+
 
         return response()->json([
-            'data' => $users,
+            'data' => $data,
             'error' => null,
         ]);
 
@@ -311,22 +327,33 @@ class UserController extends Controller
 
 
 
-    public function addTocompanies(Request $request) {
+    public function addCompanies(Request $request) {
 
         $user = User::find($request->userId);
-        $companyIds = $request->companyIds;
+        $companyIds = $request->get('companyIds', []);
+        $exists_ids = [];
+        $userCompanies = DB::select("select company_id from courier_companies where courier_id = ".$user->id);
+        foreach ($userCompanies as $userCompany) {
+            if(!in_array($userCompany->company_id, $companyIds)) {
+                DB::table('courier_companies')->where('courier_id', $user->id)->where('company_id', $userCompany->company_id)->delete();
+            } else {
+                $exists_ids[] = $user->company_id;
+            }
+        }
         $insert_data = [];
         foreach ($companyIds as $companyId) {
-            array_push($insert_data, [
-                'company_id' => $companyId,
-                'courier_id' => $user->id,
-            ]);
+            if(!in_array($companyId, $exists_ids)) {
+                array_push($insert_data, [
+                    'company_id' => $companyId,
+                    'courier_id' => $user->id,
+                ]);
+            }
         }
-        $inserted = DB::table('company_couriers')->insert($insert_data);
+        $inserted = DB::table('courier_companies')->insert($insert_data);
 
         if($inserted) {
             return response()->json([
-                'data' => ["message"=>"Seçilən mağazalar kuryerə əlavə olundu"],
+                'data' => ["message"=>"Uğurlu"],
                 'error' => null,
             ]);
         } else {
@@ -341,19 +368,30 @@ class UserController extends Controller
     public function addOrders(Request $request) {
 
         $user = User::find($request->userId);
-        $orderIds = $request->orderIds;
+        $orderIds = $request->get('orderIds', []);
+        $exists_ids = [];
+        $userOrders = DB::select("select order_id from courier_orders where courier_id = ".$user->id);
+        foreach ($userOrders as $userOrder) {
+            if(!in_array($userOrder->order_id, $orderIds)) {
+                DB::table('courier_orders')->where('courier_id', $user->id)->where('company_id', $userOrder->order_id)->delete();
+            } else {
+                $exists_ids[] = $user->order_id;
+            }
+        }
         $insert_data = [];
         foreach ($orderIds as $orderId) {
-            array_push($insert_data, [
-                'order_id' => $orderId,
-                'courier_id' => $user->id,
-            ]);
+            if(!in_array($orderId, $exists_ids)) {
+                array_push($insert_data, [
+                    'order_id' => $orderId,
+                    'courier_id' => $user->id,
+                ]);
+            }
         }
-        $inserted = DB::table('company_couriers')->insert($insert_data);
+        $inserted = DB::table('courier_orders')->insert($insert_data);
 
         if($inserted) {
             return response()->json([
-                'data' => ["message"=>"Seçilən sifarişlər kuryerə əlavə olundu"],
+                'data' => ["message"=>"Uğurlu"],
                 'error' => null,
             ]);
         } else {
