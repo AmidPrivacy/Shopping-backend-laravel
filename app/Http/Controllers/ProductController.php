@@ -17,16 +17,16 @@ class ProductController extends Controller
         $limit = isset($request->limit) ? $request->limit : 10;
         $offset = isset($request->offset) ? $request->offset*10 : 0;
 
-        $sql = ""; 
+        $sql = "";
 
         if($request->id) {
             $sql .= " and p.id=".$request->id;
         }
 
         if($request->name) {
-            $sql .= " and p.name like "."'$request->name%'";
+            $sql .= " and p.name like "."'%$request->name%'";
         }
-   
+
         if($request->parentCategoryId) {
             $sql .= " and p.parent_category_id=".$request->parentCategoryId;
         }
@@ -50,12 +50,12 @@ class ProductController extends Controller
         $limit = $request->companyId || $request->isEmptySp || $request->isEmptyImg ? 1000 : $limit;
 
         $allProducts = DB::select("select p.id from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0".$sql);
-        $datas = DB::select("select p.id, p.uuid, p.name, p.is_best_selling as bestSelling, p.is_popular as isPopular, m.name as menu, p.description, 
-                            p.price, p.discount, c.name as category, p.warranty, p.star, p.created_at from products p left join sub_categories c 
+        $datas = DB::select("select p.id, p.uuid, p.name, p.is_best_selling as bestSelling, p.is_popular as isPopular, m.name as menu, p.description,
+                            p.price, p.discount, c.name as category, p.warranty, p.star, p.created_at from products p left join sub_categories c
                             on p.category_id=c.id left join menus m on p.menu_id=m.id
                             where p.is_deleted=0".$sql." order by p.id desc LIMIT ? OFFSET ?", [$limit, $offset]);
 
-        
+
         $products = [];
 
         foreach($datas as $key => $data) {
@@ -64,14 +64,14 @@ class ProductController extends Controller
 
             if($request->companyId) {
                 $checkCompany = " and r.company_id=".$request->companyId;
-            } 
+            }
 
             $data->companies = DB::select("select r.id, c.name, r.price as price, r.percentage as percentage from
-                product_company_relations r inner join companies c on r.company_id=c.id where r.product_id=? 
+                product_company_relations r inner join companies c on r.company_id=c.id where r.product_id=?
                 and r.is_deleted=0".$checkCompany, [$data->id]);
 
-            if(!($request->companyId && count($data->companies)===0)) { 
-                array_push($products, $data); 
+            if(!($request->companyId && count($data->companies)===0)) {
+                array_push($products, $data);
             }
         }
 
@@ -92,15 +92,15 @@ class ProductController extends Controller
 
 
         $filterBySp = array_filter($products, static function ($element) {
- 
-            GLOBAL $request; 
-            return !($request->isEmptySp==true && count($element->specifications)>0); 
+
+            GLOBAL $request;
+            return !($request->isEmptySp==true && count($element->specifications)>0);
 
         });
 
         $filterByImage = array_filter($filterBySp, static function ($element) {
- 
-            GLOBAL $request;  
+
+            GLOBAL $request;
             return !($request->isEmptyImg==true && count($element->images)>0);
 
         });
@@ -151,7 +151,7 @@ class ProductController extends Controller
 
 
         $productInfo = Products::find($id);
- 
+
 
         $oldSpecifications = DB::select("select specification_id, value from product_specification_relations
                                             where product_id=? and is_deleted=0", [$id]);
@@ -160,11 +160,11 @@ class ProductController extends Controller
 
         $oldImages = DB::select("select name from product_images where product_id=? and is_deleted=0", [$id]);
 
-        $oldCompanies = DB::select("select company_id, price, percentage from product_company_relations 
+        $oldCompanies = DB::select("select company_id, price, percentage from product_company_relations
                                         where product_id=? and is_deleted=0", [$id]);
 
         if($productInfo !==null) {
- 
+
 
             $newProduct = new Products();
 
@@ -185,27 +185,27 @@ class ProductController extends Controller
 
                     $specifications = [];
                     foreach ($oldSpecifications as $item)
-                    { 
+                    {
                         array_push($specifications, [
                             'specification_id' => $item->specification_id,
                             'value' => $item->value,
                             'product_id' => $newProduct->id
                         ]);
-                    } 
+                    }
 
                     DB::table('product_specification_relations')->insert($specifications);
                 }
-                
+
                 if(count($oldValues)) {
 
                     $values = [];
                     foreach ($oldValues as $item)
-                    { 
+                    {
                         array_push($values, [
-                            'value_id' => $item->value_id, 
+                            'value_id' => $item->value_id,
                             'product_id' => $newProduct->id
                         ]);
-                    } 
+                    }
 
                     DB::table('product_value_relations')->insert($values);
 
@@ -215,12 +215,12 @@ class ProductController extends Controller
 
                     $images = [];
                     foreach ($oldImages as $item)
-                    { 
+                    {
                         array_push($images, [
-                            'name' => $item->name, 
+                            'name' => $item->name,
                             'product_id' => $newProduct->id
                         ]);
-                    } 
+                    }
 
                     DB::table('product_images')->insert($images);
 
@@ -230,14 +230,14 @@ class ProductController extends Controller
 
                     $companies = [];
                     foreach ($oldCompanies as $item)
-                    { 
+                    {
                         array_push($companies, [
-                            'company_id' => $item->company_id, 
-                            'price' => $item->price, 
-                            'percentage' => $item->percentage, 
+                            'company_id' => $item->company_id,
+                            'price' => $item->price,
+                            'percentage' => $item->percentage,
                             'product_id' => $newProduct->id
                         ]);
-                    } 
+                    }
 
                     DB::table('product_company_relations')->insert($companies);
 
