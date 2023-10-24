@@ -67,10 +67,15 @@ class UserController extends Controller
 
         $data = array_map(function($user) use($userCompanies, $userOrders) {
             if(in_array($user->id, $userCompanies->pluck('courier_id')->toArray())) {
+                $user->orders = [];
                 $user->companies = explode(',', $userCompanies->filter(function($item) use ($user) { return $item->courier_id === $user->id;})->pluck('company_list')->first());
-            }
+            } else
             if(in_array($user->id, $userOrders->pluck('courier_id')->toArray())) {
+                $user->companies = [];
                 $user->orders = explode(',', $userOrders->filter(function($item) use ($user) { return $item->courier_id === $user->id;})->pluck('order_list')->first());
+            } else {
+                $user->orders = [];
+                $user->companies = [];
             }
             return $user;
         }, $users);
