@@ -25,64 +25,20 @@ class UserController extends Controller
 
     public function list(Request $request) {
 
-        $query = "";
-
-        if(strlen($request->name)) {
-            $query .= " and u.name like '%$request->name%' ";
-        }
-
-        if(strlen($request->number)) {
-            $query .= " and u.number like '%$request->number%' ";
-        }
-
-        if(strlen($request->email)) {
-            $query .= " and u.email like '%$request->email%' ";
-        }
-
-        if(strlen($request->drivingLicense)) {
-            $query .= " and u.driving_license like '%$request->drivingLicense%' ";
-        }
-
-        if(strlen($request->carNumber)) {
-            $query .= " and u.car_number like '%$request->carNumber%' ";
-        }
-
-        if(strlen($request->subject)) {
-            $query .= " and s.name like '%$request->subject%' ";
-        }
-
-        if(strlen($request->role)) {
-            $query .= " and u.role like '%$request->role%' ";
-        }
-
-
-       $users = DB::select("select u.id, u.name, u.email, u.number,
-                    u.picture, u.address, u.role from users u where u.status=1 ".$query);
-
-        $companyCourierIds = collect($users)->filter(function($item) { return $item->role === 6;})->pluck('id');
-        $userCompanies = collect(DB::select("select GROUP_CONCAT(company_id) as company_list, courier_id from courier_companies where courier_id in (".implode(',', $companyCourierIds->toArray()).") group by courier_id"));
-
-        $orderCourierIds = collect($users)->filter(function($item) { return $item->role === 7;})->pluck('id');
-        $userOrders = collect(DB::select("select GROUP_CONCAT(order_id) as order_list, courier_id from courier_orders where courier_id in (".implode(',', $orderCourierIds->toArray()).") group by courier_id"));
-
-        $data = array_map(function($user) use($userCompanies, $userOrders) {
-            if(in_array($user->id, $userCompanies->pluck('courier_id')->toArray())) {
-                $user->orders = [];
-                $user->companies = explode(',', $userCompanies->filter(function($item) use ($user) { return $item->courier_id === $user->id;})->pluck('company_list')->first());
-            } else
-            if(in_array($user->id, $userOrders->pluck('courier_id')->toArray())) {
-                $user->companies = [];
-                $user->orders = explode(',', $userOrders->filter(function($item) use ($user) { return $item->courier_id === $user->id;})->pluck('order_list')->first());
-            } else {
-                $user->orders = [];
-                $user->companies = [];
+        $users = User::with(['companies', 'orders'])->where(function($query) use($request) {
+            if(strlen($request->name)) {
+                $query->where('name', 'like', '%'.$request->name.'%');
             }
-            return $user;
-        }, $users);
-
+            if(strlen($request->number)) {
+                $query->where('number', 'like', '%'.$request->number.'%');
+            }
+            if(strlen($request->email)) {
+                $query->where('email', 'like', '%'.$request->email.'%');
+            }
+        })->where('status', 1)->get();
 
         return response()->json([
-            'data' => $data,
+            'data' => $users,
             'error' => null,
         ]);
 
