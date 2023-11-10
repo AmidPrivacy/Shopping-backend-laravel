@@ -68,7 +68,7 @@ class User extends Authenticatable
 
     public function orders()
     {
-        return $this->belongsToMany(Orders::class, 'courier_orders', 'courier_id', 'order_id');
+        return $this->belongsToMany(Order::class, 'courier_orders', 'courier_id', 'order_id');
     }
 
 // public function getRoleAttribute($value) {
