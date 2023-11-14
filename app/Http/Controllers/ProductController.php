@@ -177,6 +177,7 @@ class ProductController extends Controller
             $newProduct->menu_id = $productInfo->menu_id;
             $newProduct->is_best_selling = 0;
             $newProduct->uuid = (string) Str::uuid();
+            $newProduct->author_id = auth()->id();
             $newProduct->warranty = $productInfo->warranty;
 
             if($newProduct->save()) {
@@ -338,6 +339,7 @@ class ProductController extends Controller
         $product->parent_category_id = $request->parentCategoryId;
         $product->warranty = $request->warranty;
         $product->uuid = (string) Str::uuid();
+        $product->author_id = auth()->id();
 
         if($product->save()) {
 
