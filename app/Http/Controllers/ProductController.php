@@ -90,6 +90,10 @@ class ProductController extends Controller
             $data->images = DB::select("select name from product_images where product_id=? and is_deleted=0", [$data->id]);
         }
 
+        foreach($products as $data) {
+            $data->author = DB::select("select name from users where id=?", [$data->id]);
+        }
+
 
         $filterBySp = array_filter($products, static function ($element) {
 
