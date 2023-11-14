@@ -91,7 +91,7 @@ class ProductController extends Controller
         }
 
         foreach($products as $data) {
-            $data->author = DB::select("select name from users where id=?", [$data->id]);
+            $data->author = DB::selectOne("select name from users where id=?", [$data->id]);
         }
 
 
