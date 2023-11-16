@@ -283,7 +283,7 @@ class CompanyController extends Controller
 
     public function orders(Request $request) { 
 
-        $orders = CompanyOrderItem::all();
+        $orders = CompanyOrderItem::where('company_id', auth()->id());
         return response()->json([
             'data' => ["orders"=>$orders],
             'error' => null,
