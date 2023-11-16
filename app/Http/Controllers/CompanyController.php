@@ -291,4 +291,11 @@ class CompanyController extends Controller
 
     }
 
+    public function setOrderStatus(Request $request) {
+        return response()->json([
+            'data' => ["status"=> 'ok'],
+            'error' => null,
+        ]);
+    }
+
 }
