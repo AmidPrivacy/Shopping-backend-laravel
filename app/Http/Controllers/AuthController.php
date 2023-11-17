@@ -44,6 +44,8 @@ class AuthController extends Controller
             $plainPassword = $request->input("password");
             $user->password = app("hash")->make($plainPassword);
             $user->role = $request->input('role');
+            $user->asan_center_id = $request->input('asan_center_id');
+            $user->company_id = $request->input('company_id');
             $user->save(); 
             return response()->json(["user" => $user, "message" => "CREATED"], 201);
         } catch (\Exception $e) {

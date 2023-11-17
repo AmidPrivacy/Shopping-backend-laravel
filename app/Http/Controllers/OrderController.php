@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use  App\Models\Orders;
+use  App\Models\Order;
 use App\Models\Products;
 use  App\Models\Rows;
 use Illuminate\Support\Str;
@@ -33,7 +33,7 @@ class OrderController extends Controller
 
     public function getById($id) {
 
-        $orderInfo = Orders::find($id);
+        $orderInfo = Order::find($id);
 
         $orderInfo->items = DB::select("select * from order_items where is_deleted=0 and order_id=?", [$id]);
 
@@ -46,7 +46,7 @@ class OrderController extends Controller
 
     public function setStatus(Request $request) {
 
-        $order = Orders::find($request->orderId);
+        $order = Order::find($request->orderId);
         $order->is_deleted = $request->status;
 
         if($order->save()) {
@@ -85,7 +85,7 @@ class OrderController extends Controller
 
     public function add(Request $request) {
 
-        $order = new Orders;
+        $order = new Order;
 
         $order->fullname = $request->fullName;
         $order->phone = $request->phone;
@@ -246,11 +246,11 @@ class OrderController extends Controller
 
     public function getOrderDetail($id) {
 
-        $orderInfo = Orders::find($id);
+        $orderInfo = Order::find($id);
 
-        $orderInfo->items = DB::select("select p.id, p.name, p.price, p.uuid from order_items o inner join products p 
+        $orderInfo->items = DB::select("select p.id, p.name, p.price, p.uuid from order_items o inner join products p
                                         on o.product_id=p.id where o.is_deleted=0 and o.order_id=?", [$id]);
- 
+
 
         return response()->json([
             'data' => $orderInfo,

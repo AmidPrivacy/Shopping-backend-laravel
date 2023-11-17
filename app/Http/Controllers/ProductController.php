@@ -90,6 +90,10 @@ class ProductController extends Controller
             $data->images = DB::select("select name from product_images where product_id=? and is_deleted=0", [$data->id]);
         }
 
+        foreach($products as $data) {
+            $data->author = DB::selectOne("select name from users where id=?", [$data->id]);
+        }
+
 
         $filterBySp = array_filter($products, static function ($element) {
 
@@ -177,6 +181,7 @@ class ProductController extends Controller
             $newProduct->menu_id = $productInfo->menu_id;
             $newProduct->is_best_selling = 0;
             $newProduct->uuid = (string) Str::uuid();
+            $newProduct->author_id = auth()->id();
             $newProduct->warranty = $productInfo->warranty;
 
             if($newProduct->save()) {
@@ -338,6 +343,7 @@ class ProductController extends Controller
         $product->parent_category_id = $request->parentCategoryId;
         $product->warranty = $request->warranty;
         $product->uuid = (string) Str::uuid();
+        $product->author_id = auth()->id();
 
         if($product->save()) {
 

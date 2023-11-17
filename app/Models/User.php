@@ -52,14 +52,24 @@ class User extends Authenticatable
 
 
     public static function boot() {
-    parent::boot();
-    self::creating(function ($model) {
-        if($model->role == 4) {
-            $model->referral_code = (string) random_int(100000, 999999);
-        }
-    });
-    
-}
+        parent::boot();
+        self::creating(function ($model) {
+            if($model->role == 4) {
+                $model->referral_code = (string) random_int(100000, 999999);
+            }
+        });
+
+    }
+
+    public function companies()
+    {
+        return $this->belongsToMany(Companies::class, 'courier_companies', 'courier_id', 'company_id');
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'courier_orders', 'courier_id', 'order_id');
+    }
 
 // public function getRoleAttribute($value) {
 //     return ['name' => self::ROLES[$value], 'value' => $value];

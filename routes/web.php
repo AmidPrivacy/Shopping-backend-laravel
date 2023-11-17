@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Jobs\OrderReceived;
+use App\Models\Order;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +19,11 @@ use App\Http\Controllers\OrderController;
 */
 
 Route::get('/', [HomeController::class, 'index']);
+
+Route::get('/emin', function() {
+    $order = Order::find(1);
+    dispatch(new OrderReceived($order))->delay(10);
+});
 
 
 Route::get('/product/{id}', [HomeController::class, 'getById']);

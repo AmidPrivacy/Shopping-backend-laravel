@@ -84,6 +84,8 @@ use App\Http\Controllers\SubscriberController;
     $router->post('/company-image', [CompanyController::class, 'upload']);
     $router->post('/company-relation', [CompanyController::class, 'addRelation']);
     $router->delete('/company-relation/{id}', [CompanyController::class, 'deleteRelation']);
+    $router->get('/company/orders', [CompanyController::class, 'orders']);
+    $router->post('/company/orders/set-status', [CompanyController::class, 'setOrderStatus']);
 
 
 

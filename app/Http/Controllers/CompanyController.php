@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Validator;
 use  App\Models\Companies; 
 use  App\Models\Products; 
 use  App\Models\Rows; 
-use  App\Models\CategoryCompanyRelations; 
+use  App\Models\CategoryCompanyRelations;
+use App\Models\CompanyOrderItem;
 use  App\Models\ProductCompanyRelations; 
 use Illuminate\Support\Str;
 
@@ -276,6 +277,25 @@ class CompanyController extends Controller
             $response["message"] = "Failed! image(s) not uploaded";
         }
         return response()->json($response);
+    }
+
+
+
+    public function orders(Request $request) { 
+
+        $orders = CompanyOrderItem::where('company_id', auth()->id());
+        return response()->json([
+            'data' => ["orders"=>$orders],
+            'error' => null,
+        ]);
+
+    }
+
+    public function setOrderStatus(Request $request) {
+        return response()->json([
+            'data' => ["status"=> 'ok'],
+            'error' => null,
+        ]);
     }
 
 }
