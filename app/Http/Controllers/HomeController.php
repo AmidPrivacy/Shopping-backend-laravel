@@ -349,5 +349,25 @@ class HomeController extends Controller
         return ["products"=>$products, "totalCount"=>count($all), "currentRange" => ($offset*10)." - ".$limit];
 
     }
+ 
+    public function searchAutoComplete(Request $request) {
+ 
+        $sql = "";
+ 
+        if($request->search) {
+            $sql .= " and p.name like "."'%$request->search%'";
+        } 
+ 
+        $datas = DB::select("select p.id, p.uuid, p.name, m.name as menu,
+                            p.price, c.name as category from products p left join sub_categories c
+                            on p.category_id=c.id left join menus m on p.menu_id=m.id
+                            where p.is_deleted=0".$sql." order by p.id desc LIMIT 15 OFFSET 0");
+
+        return response()->json([
+            'data' => $datas,
+            'error' => null,
+        ]);
+
+    }
 
 }

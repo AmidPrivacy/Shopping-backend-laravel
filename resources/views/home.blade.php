@@ -36,74 +36,7 @@
         </div>
  
     </section>
-
-    <!-- SECTION-TWO -->
-    <section class="section-page-two">
-        <div class="custom-container">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="d-flex">
-                        <div class="icon-page-two">
-                            <i class="fa-solid fa-truck"></i>
-                        </div>
-
-                        <div class="section-div-h5">
-                            <h5>Çatdırılma xidməti</h5>
-                            <p> 300 AZN + alış verişdə çatdırılma ödənişsizdir </p>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-md-3">
-                    <div class="d-flex">
-                        <div class="icon-page-two">
-                            <i class="fa-solid fa-hand-holding-dollar"></i>
-                        </div>
-
-                        <div class="section-div-h5">
-                            <h5>Məhsulun qaytarılması</h5>
-                            <p>Alınan məhsullar 14gün ərzində qaytarıla bilər</p>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-md-3">
-                    <div class="d-flex">
-                        <div class="icon-page-two">
-                            <i class="fa-solid fa-lock"></i>
-                        </div>
-
-                        <div class="section-div-h5">
-                            <h5>Təhlükəsiz ödəniş</h5>
-                            <p>Alınan məhsulu online ödəmə imkanı</p>
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div class="col-md-3">
-                    <div class="d-flex">
-                        <div class="icon-page-two">
-                            <i class="fa-sharp fa-solid fa-headset"></i>
-                        </div>
-
-                        <div class="section-div-h5">
-                            <h5>24/7 Dəstək</h5>
-                            <p> Müştərilərimiz üçün 24/7 dəstək xidməti </p>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
+ 
     <!-- SECTION-PRODUCTS -->
     <section class="section-product">
         <div class="custom-container">
@@ -202,6 +135,73 @@
                 Abunəçilərə birinci ay üçün xidmət ödənişsizdir 
             </div> 
         </div> 
+    </section>
+
+        <!-- SECTION-TWO -->
+        <section class="section-page-two">
+        <div class="custom-container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="d-flex">
+                        <div class="icon-page-two">
+                            <i class="fa-solid fa-truck"></i>
+                        </div>
+
+                        <div class="section-div-h5">
+                            <h5>Çatdırılma xidməti</h5>
+                            <p> 300 AZN + alış verişdə çatdırılma ödənişsizdir </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+                    <div class="d-flex">
+                        <div class="icon-page-two">
+                            <i class="fa-solid fa-hand-holding-dollar"></i>
+                        </div>
+
+                        <div class="section-div-h5">
+                            <h5>Məhsulun qaytarılması</h5>
+                            <p>Alınan məhsullar 14gün ərzində qaytarıla bilər</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-3">
+                    <div class="d-flex">
+                        <div class="icon-page-two">
+                            <i class="fa-solid fa-lock"></i>
+                        </div>
+
+                        <div class="section-div-h5">
+                            <h5>Təhlükəsiz ödəniş</h5>
+                            <p>Alınan məhsulu online ödəmə imkanı</p>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-3">
+                    <div class="d-flex">
+                        <div class="icon-page-two">
+                            <i class="fa-sharp fa-solid fa-headset"></i>
+                        </div>
+
+                        <div class="section-div-h5">
+                            <h5>24/7 Dəstək</h5>
+                            <p> Müştərilərimiz üçün 24/7 dəstək xidməti </p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </section>
 
 @endsection

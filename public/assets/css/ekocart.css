@@ -152,7 +152,27 @@ header {
     height: 43px;
     border: solid 1px #ccc;
     border-radius: 4px;
-    overflow: hidden;
+    /* overflow: hidden; */
+}
+
+.header-brand .search .auto-complete {
+    position: relative;
+    z-index: 1000;
+    margin-top: 45px;
+}
+
+.header-brand .search .auto-complete ul {
+    display: block;
+}
+
+.header-brand .search .auto-complete ul a {
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.header-brand .search .auto-complete ul a span {
+    color: #ccc;
+    font-weight: 400;
 }
 
 .header-brand .search select {
@@ -167,7 +187,7 @@ header {
     width: 90%;
     float: left;
     border: none;
-    height: 42px;
+    height: 40px;
     padding-left: 15px;
 }
 
@@ -371,6 +391,7 @@ section.section-table {
     display: flex;
     margin: 75px;
     margin-right: 0;
+    flex-wrap: wrap;
 }
 
 .home-shop nav ul li #home {
@@ -626,6 +647,13 @@ section.section-table {
 
 .cart-action-box button i {
     margin-right: 8px;
+}
+
+.cart-action-box button img {
+    display: none;
+    width: 22px;
+    margin-top: -3px;
+    margin-right: 1px;
 }
 
 .cart-a {

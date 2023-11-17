@@ -69,9 +69,9 @@
                     <button class="btn" type="submit">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
+                    <div class="auto-complete"><ul class="list-group"></ul></div>
                 </form>
 
-            
                 <!-- navbar -->
                 <div class="navbar-layer"> 
                     <nav>
@@ -109,10 +109,7 @@
             <div class="row">
                 <div class="col-md-3 footer-top"> 
                     <img src="/assets/img/brand.svg" alt="photo">
-                    <h5>
-                        Əlçatan -  In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document
-                    </h5>
-
+                    <h5> Cehizin çeşidliyi, seçimin rahatlığı </h5>
                     <div class="footer-icons">
                         <ul>
                             
@@ -147,8 +144,8 @@
                 <div class="col-md-4 offset-md-2 footer-top">
                     <div class="second-info" id="info">
                         <h2>Özəlliklər</h2>
-                        <ul class="li-style">
-                            <li><a href="#">Xidmətlərimiz</a></li> 
+                        <ul class="li-style"> 
+                            <li><a href="#">Haqqımızda</a> </li>
                             <li><a href="#">Üstünlüklərimiz</a> </li>
                             <li><a href="#">Müraciət və Geri dönüş</a> </li>
                             <li><a href="#">Karyeranızı bizimlə qurun</a></li> 
@@ -162,20 +159,20 @@
                     <div class="contact">
                         <div class="icon"> <i class="fa-solid fa-map"></i> </div>
                         <h6>Bizim ünvanımız</h6>
-                        <p>Bakı şəhər</p>
+                        <p>Sədərək T/M, Bakı şəhəri</p>
                     </div>
 
                    
                     <div class="contact">
                         <div class="icon"> <i class="fa-solid fa-envelope"></i> </div>
                         <h6>Email us</h6>
-                        <p>elchatan@gmail.com</p>
+                        <p>info@mayakfamily.az</p>
                     </div>
   
                     <div class="contact">
                         <div class="icon"> <i class="fa-solid fa-mobile-screen-button contact-icon"></i> </div>
                         <h6>Phone number</h6>
-                        <p>+9977777117</p>
+                        <p>+994 123</p>
                     </div>
  
                     <div class="contact">
@@ -214,8 +211,8 @@
             <div class="d-flex justify-content-between basket-total-price">
                 <span class="text-muted">Cəmi:</span><span class="text-dark">$1800.00</span>
             </div>
-            <a class="btn btn-primary view-cart-details" href="/cart"><i class="las la-shopping-cart mr-1"></i>Səbətə baxış</a>
-            <a class="btn btn-dark continue-checkout" href="/"><i class="las la-money-check mr-1"></i>Sifarişə davam edin</a>
+            <a class="btn btn-primary view-cart-details" href="/cart"><i class="las la-shopping-cart mr-1"></i>İndi al</a>
+            <a class="btn btn-dark continue-checkout" href="/"><i class="las la-money-check mr-1"></i>Sifarişə davam et</a>
         </div>
     </div>
     <script src="../assets/js/jquery-3.js"></script>
@@ -273,26 +270,27 @@
 
         function deleteCartItem(product_id, isCartPage) {
             var data = {
-                    '_token': $('input[name=_token]').val(),
-                    "product_id": product_id,
-                };
-  
-                $.ajax({
-                    url: '/delete-from-cart',
-                    type: 'DELETE',
-                    data: data,
-                    success: function (response) {
-                        if(isCartPage) {
-                            window.location.reload();
-                        } else {
-                            loadCartProducts();
-                            loadCartCount()
-                        }
-                        
+                '_token': $('input[name=_token]').val(),
+                "product_id": product_id,
+            };
+
+            $.ajax({
+                url: '/delete-from-cart',
+                type: 'DELETE',
+                data: data,
+                success: function (response) {
+                    if(isCartPage) {
+                        window.location.reload();
+                    } else {
+                        loadCartProducts();
+                        loadCartCount()
                     }
-                });
+                    
+                }
+            });
         }
-        
+
+         
         $(document).ready(function () {
             $.ajaxSetup({
                 headers: {
@@ -303,10 +301,55 @@
             loadCartCount();
 
             $(".card-shopping-details").click(function (e) { loadCartProducts() });
+
             $(document).on("click", ".basket-product-description button", function (e) { 
                 
                 deleteCartItem($(this).attr("id"), false); 
             });
+
+            
+            document.addEventListener("click", function (e) {
+                if(!document.querySelector('.header-brand .search').contains(e.target)){
+                    document.querySelector(".header-brand .search .auto-complete ul").innerHTML = '';
+                }
+            }, false); 
+
+            $(document).on("keyup focus", ".header-brand .search input", function (e) { 
+                
+                let val = $(this).val();
+                res = document.querySelector(".header-brand .search .auto-complete ul");
+                res.innerHTML = '';
+                if (val !== '') {
+                    $.ajax({
+                        url: '/search-autocomplete',
+                        type: 'POST',
+                        data: {
+                            search: val,
+                            '_token': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (response) {
+
+                            let str ="";
+                            response.data.forEach(item => {
+
+                                str += `<a href="/product/${item.uuid}"><li class="list-group-item">${item.name}(<span>${item.category??'Kateqoriya seçilməyib'}</span>)</li></a>`;
+                            
+                            });
+
+                            res.innerHTML = str;
+                            
+                        }, 
+                        error: function (err) {
+                            console.log(err)
+                        }
+                    });
+                } 
+
+             
+
+ 
+            });
+
 
             $(".header-brand .mobile-toggle").click(function(){
 

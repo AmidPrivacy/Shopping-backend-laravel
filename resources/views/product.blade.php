@@ -1,5 +1,4 @@
-@extends('layouts.app')
-
+@extends('layouts.app') 
 @section('content')
     <!-- SECTION  -->
     <section class="home-page product-name-and-breadcrumb">
@@ -87,7 +86,11 @@
                             <i class="fa-solid fa-plus iconminus"></i>
                         </div>
                         <div class="cart-action-box">
-                            <button><i class="fa-solid fa-cart-shopping"></i>Səbətə at</button>
+                            
+                            <button>
+                                <img src="/assets/img/loading.gif" alt="">
+                                <i class="fa-solid fa-cart-shopping"></i>Səbətə at
+                            </button>
                         </div>
 
                     </div>
@@ -172,14 +175,20 @@
         </div>
     </section>
     @endif
+  <!-- Toast -->
+    <div id="toastNotice" class="toast position-fixed bottom-0 end-0 p-3"> 
+        <div class="toast-body">
+            Məhsul səbətə əlavə olundu
+        </div>  
+    </div> 
 
-
-
+    <!-- <div class="cart-loading"></div> -->
 @endsection
 
 @section('js')
     <script src="../assets/js/owl.carousel.min.js"></script>
     <script>
+ 
         $( document ).ready(function() {
             $(".image-tab-box img").click(function(){
                 let path = $(this).attr("src");
@@ -214,6 +223,9 @@
                 var product_id = $('.product-id').val();
                 var quantity = $(".product-num #product-count").val();
 
+                $(".cart-action-box button i").hide();
+                $(".cart-action-box button img").show();
+
                 $.ajax({
                     url: "/add-to-cart",
                     method: "POST",
@@ -223,6 +235,11 @@
                     },
                     success: function (response) {
                         loadCartCount();
+                        $(".cart-action-box button img").hide();
+                        $(".cart-action-box button i").show();
+                        var myAlert =document.getElementById('toastNotice');//select id of toast
+                        var bsAlert = new bootstrap.Toast(myAlert);//inizialize it
+                        bsAlert.show();//show it
                     },
                 });
             });
