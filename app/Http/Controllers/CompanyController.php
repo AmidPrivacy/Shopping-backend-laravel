@@ -169,6 +169,7 @@ class CompanyController extends Controller
  
         $row->product_id = $request->rowId;
         $row->company_id = $request->companyId;
+        $row->in_stock = $request->in_stock;
 
         if(filter_var($request->isPrice, FILTER_VALIDATE_BOOLEAN)) {
             $price = $request->value;

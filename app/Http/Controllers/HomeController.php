@@ -84,8 +84,11 @@ class HomeController extends Controller
         $datas = DB::select("select p.id, p.uuid, p.name, p.description, p.price, p.discount, c.name as categoryName, c.uuid as categoryId, p.warranty, 
             p.star, p.created_at from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0 and p.uuid=? order by p.id desc", [$id]); 
 
-        // dd($datas);
-        foreach($datas as $data) {  
+        $companies = DB::select("select r.price as price,r.in_stock as in_stock,r.product_id as product_id,c.id as company_id, c.name as company_name
+        from product_company_relations r inner join companies c on r.company_id = c.id
+        where r.product_id = " . $datas[0]->id);
+
+        foreach($datas as $data) {
             $data->specifications = DB::select("select p.id, s.name, p.value from product_specification_relations p 
             inner join specifications s on p.specification_id=s.id where p.product_id=? and p.is_deleted=0", [$data->id]); 
         }
@@ -148,7 +151,7 @@ class HomeController extends Controller
             $menu->categories = $categories;
         }
  
-        return view('product')->with(['data'=>$productInfo, "menus"=>$menus]); 
+        return view('product')->with(['data'=>$productInfo, "companies" => $companies, "menus"=>$menus]); 
     }
 
     public function getProductsByMenuId($id, Request $request)
