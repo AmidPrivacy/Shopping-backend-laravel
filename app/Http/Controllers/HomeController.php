@@ -84,7 +84,7 @@ class HomeController extends Controller
         $datas = DB::select("select p.id, p.uuid, p.name, p.description, p.price, p.discount, c.name as categoryName, c.uuid as categoryId, p.warranty, 
             p.star, p.created_at from products p left join sub_categories c on p.category_id=c.id where p.is_deleted=0 and p.uuid=? order by p.id desc", [$id]); 
 
-        $companies = DB::select("select r.price as price,r.in_stock as in_stock,r.product_id as product_id,c.id as company_id, c.name as company_name
+        $companies = DB::select("select r.price as price,r.in_stock as in_stock,r.product_id as product_id,c.r_person as r_person,c.r_number as r_number,c.id as company_id, c.name as company_name
         from product_company_relations r inner join companies c on r.company_id = c.id
         where r.product_id = " . $datas[0]->id);
 
