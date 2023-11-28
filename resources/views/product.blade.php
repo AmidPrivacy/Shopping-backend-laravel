@@ -77,24 +77,35 @@
 
                     </div>
 
-                    <div class="align-items card-actions">
-                        <div class="product-num">
-                            <i class="fa-solid fa-minus iconplus"></i>
-                            @csrf
-                            <input type="hidden" class="product-id" value="{{ $data->uuid }}">
-                            <input type="number" id="product-count" name="product" value="1">
-                            <i class="fa-solid fa-plus iconminus"></i>
+                    <div class="firms-box"> 
+                    @foreach($companies as $company)
+                        <div class="align-items card-actions" id="product-firms">
+                            <div class="company-name">{{ $company->r_person }}</div>
+                            <div class="company-price">{{ $company->price }}AZN</div>
+                            @if($company->in_stock ==1)
+                            <div class="product-num">
+                                <i class="fa-solid fa-minus iconplus"></i>
+                                @csrf
+                                <input type="hidden" class="product-id" value="{{ $data->uuid }}">
+                                <input type="hidden" class="company-id" value="{{ $company->company_id }}">
+                                <input type="number" id="product-count" name="product" value="1">
+                                <i class="fa-solid fa-plus iconminus"></i>
+                            </div>
+                            @endif
+                            <div class="cart-action-box"> 
+                                @if($company->in_stock ==1)
+                                <button>
+                                    <img src="/assets/img/loading.gif" alt="">
+                                    <i class="fa-solid fa-cart-shopping"></i>Səbətə at
+                                </button>
+                                @else
+                                <span>Stokda yoxdur</span>
+                                @endif
+                            </div> 
                         </div>
-                        <div class="cart-action-box">
-                            
-                            <button>
-                                <img src="/assets/img/loading.gif" alt="">
-                                <i class="fa-solid fa-cart-shopping"></i>Səbətə at
-                            </button>
-                        </div>
-
+                    @endforeach
                     </div>
-
+                     
                 </div>
 
             </div>
@@ -222,6 +233,8 @@
 
                 var product_id = $('.product-id').val();
                 var quantity = $(".product-num #product-count").val();
+                var company_id = $(".product-num .company-id").val();
+                var responsible_person = $(".product-num .company-name").val();
 
                 $(".cart-action-box button i").hide();
                 $(".cart-action-box button img").show();
@@ -230,8 +243,10 @@
                     url: "/add-to-cart",
                     method: "POST",
                     data: {
-                        'quantity': quantity,
-                        'product_id': product_id,
+                        quantity,
+                        product_id,
+                        company_id,
+                        responsible_person
                     },
                     success: function (response) {
                         loadCartCount();

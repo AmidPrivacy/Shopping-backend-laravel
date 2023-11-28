@@ -21,8 +21,10 @@
                         <form id=order-form action="" method="POST">
                             @csrf
                             @foreach ($cart_data as $key => $data)
+                            
                             <input type="hidden" name="items[{{$key}}][id]" value="{{ $data['item_id'] }}">
                             <input type="hidden" name="items[{{$key}}][quantity]" value="{{ $data['item_quantity'] }}">
+                            <input type="hidden" name="items[{{$key}}][company_id]" value="{{ $data['item_company_id'] }}">
                             @endforeach
                             <div class="form-floating mb-3">
                                 <input type="text" name="fullName" class="form-control" id="fullName" placeholder="" maxlength="35"

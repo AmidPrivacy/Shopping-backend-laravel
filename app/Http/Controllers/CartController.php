@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Products;
+use App\Models\Companies;
 use App\Models\SubCategories;
 use App\Models\ProductImages;
 use Illuminate\Support\Str;
@@ -38,6 +39,8 @@ class CartController extends Controller
 
         $prod_id = $request->input('product_id');
         $quantity = $request->input('quantity');
+        $company_id = $request->input('company_id');
+        $responsible_person = $request->input('responsible_person');
 
         // dd(Cookie::get('shopping_cart'));
 
@@ -61,6 +64,7 @@ class CartController extends Controller
                 if($cart_data[$keys]["item_id"] == $prod_id)
                 {
                     $cart_data[$keys]["item_quantity"] = $request->input('quantity');
+                    $cart_data[$keys]["company_id"] = $company_id;
                     $item_data = json_encode($cart_data);
                     $minutes = 60;
                     Cookie::queue(Cookie::make('shopping_cart', $item_data, $minutes));
@@ -71,6 +75,7 @@ class CartController extends Controller
         } else {
 
             $product = Products::where('uuid', $prod_id)->first();
+            $company = Companies::where('id', $company_id)->first();
 
             $images = DB::select("select id, name from product_images where product_id=? and is_deleted=0", [$product->id]);
 
@@ -84,6 +89,8 @@ class CartController extends Controller
                     'item_id' => $prod_id,
                     'item_name' => $prod_name,
                     'item_quantity' => $quantity,
+                    'item_company_id' => $company_id,
+                    'item_company_name' => $company->responsible_person,
                     'item_price' => $priceval,
                     'item_image' => $prod_image
                 );
@@ -102,7 +109,7 @@ class CartController extends Controller
     public function loadBasket()
     {
         $cart_data = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', Cookie::get('shopping_cart')), true );
-
+        // dd(json_encode(array('cart_data' => $cart_data)));
         echo json_encode(array('cart_data' => $cart_data)); die;
         return;
     }

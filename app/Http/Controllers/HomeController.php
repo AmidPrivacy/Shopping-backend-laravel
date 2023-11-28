@@ -150,6 +150,8 @@ class HomeController extends Controller
             }
             $menu->categories = $categories;
         }
+
+        // dd($companies);
  
         return view('product')->with(['data'=>$productInfo, "companies" => $companies, "menus"=>$menus]); 
     }

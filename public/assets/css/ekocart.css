@@ -547,7 +547,22 @@ section.section-table {
     width: 70%;
 }
  
+
+#product-firms {
+    display: flex;
+    justify-content: space-around;
+    width: 550px; 
+}
+
+#product-firms .company-name {
+    font-weight: bolder; 
+    line-height: 33px;
+}
  
+#product-firms .company-price {
+    line-height: 33px;
+}
+
 .input-check {
     width: 5%;
     opacity: 0;
@@ -627,8 +642,8 @@ section.section-table {
 }
   
 .cart-action-box {
-    margin-top: 120px;
-    width: 100%;
+    margin-top: 1px;
+    width: auto;
     height: 50px;
 }
 
@@ -654,6 +669,13 @@ section.section-table {
     width: 22px;
     margin-top: -3px;
     margin-right: 1px;
+}
+
+.cart-action-box span {
+    position: relative;
+    top: 6px;
+    font-weight: 500;
+    font-family: inherit;
 }
 
 .cart-a {
@@ -1002,6 +1024,10 @@ input[type=number] {
 #offcanvasRight .basket-product-info h6 a {
     color: black;
     text-decoration: unset;
+}
+
+#offcanvasRight .basket-product-info h6 a span {
+    color: #fe4c1c;
 }
 
 .cart-shopping-total {
