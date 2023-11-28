@@ -170,18 +170,9 @@ class CompanyController extends Controller
         $row->product_id = $request->rowId;
         $row->company_id = $request->companyId;
         $row->in_stock = $request->in_stock;
-
-        if(filter_var($request->isPrice, FILTER_VALIDATE_BOOLEAN)) {
-            $price = $request->value;
-            $percentage =  $product->price !==0 ?  (100 - ($request->value*100/$product->price)) : 0;
-        } else {
-            $percentage = $request->value;
-            $price = $product->price !==0 ?  ($product->price - ($request->value*$product->price/100)) : 0;
-        }
-
-        $row->percentage = $percentage;
-        $row->price = $price;
-       
+ 
+        $row->price = $request->value;;
+ 
         if($row->save()) {  
             return response()->json([
                 'data' => ["message"=>"Firmalar əlavə olundu"],
