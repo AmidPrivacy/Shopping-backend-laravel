@@ -38,9 +38,18 @@ use App\Http\Controllers\SubscriberController;
     // Route::get('/product/{id}', 'getById']);
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('user-profile', [AuthController::class, 'me']);
+
+    $router->middleware('auth:sanctum')->group(function($router) {
+        $router->post('logout', [AuthController::class, 'logout']);
+        $router->post('refresh', [AuthController::class, 'refresh']);
+        $router->post('user-profile', [AuthController::class, 'me']);
+
+        $router->get('/company/orders', [CompanyController::class, 'orders']);
+        $router->post('/company/orders/set-status', [CompanyController::class, 'setOrderStatus']);
+
+    });
+
+
 
     //User apis
     $router->get('/users', [UserController::class, 'list']);
@@ -76,16 +85,15 @@ use App\Http\Controllers\SubscriberController;
 
     //Company apis
     $router->get('/companies', [CompanyController::class, 'list']);
-    $router->get('/company/{id}', [CompanyController::class, 'getById']);
+    $router->get('/company/{id}', [CompanyController::class, 'getById'])->where('id', '[\d+]+');
     $router->post('/company', [CompanyController::class, 'add']);
-    $router->put('/company/{id}', [CompanyController::class, 'update']);
+    $router->put('/company/{id}', [CompanyController::class, 'update'])->where('id', '[\d+]+');
     $router->put('/company-status', [CompanyController::class, 'setStatus']);
     $router->put('/company-delete-image/{id}', [CompanyController::class, 'deleteImage']);
     $router->post('/company-image', [CompanyController::class, 'upload']);
     $router->post('/company-relation', [CompanyController::class, 'addRelation']);
     $router->delete('/company-relation/{id}', [CompanyController::class, 'deleteRelation']);
-    $router->get('/company/orders', [CompanyController::class, 'orders']);
-    $router->post('/company/orders/set-status', [CompanyController::class, 'setOrderStatus']);
+
 
 
 

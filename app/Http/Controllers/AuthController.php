@@ -11,11 +11,6 @@ use  App\Models\Children;
 class AuthController extends Controller
 {
 
-
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'refresh', 'logout']]);
-    }
     /**
      * Get a JWT via given credentials.
      *
@@ -25,28 +20,28 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        
+
         // Are the proper fields present?
         $this->validate($request, [
-            "name" => "required|string|between:2,100", 
-            "address" => "required|string|max:120", 
+            "name" => "required|string|between:2,100",
+            "address" => "required|string|max:120",
             "phone" => "required|string|max:18",
             "password" => "required|string|min:6",
             "role" => 'required|in:1,2,3,4'
         ]);
- 
+
         try {
             $user = new User;
             $user->name = $request->input("name");
             $user->number = $request->input("phone");
             $user->email = $request->input("email");
-            $user->address = $request->input("address");  
+            $user->address = $request->input("address");
             $plainPassword = $request->input("password");
             $user->password = app("hash")->make($plainPassword);
             $user->role = $request->input('role');
             $user->asan_center_id = $request->input('asan_center_id');
             $user->company_id = $request->input('company_id');
-            $user->save(); 
+            $user->save();
             return response()->json(["user" => $user, "message" => "CREATED"], 201);
         } catch (\Exception $e) {
             return response()->json(["message" => "User Registration Failed!", "error" => $e->getMessage()], 409);
@@ -63,11 +58,11 @@ class AuthController extends Controller
 
         $credentials = $request->only(['email', 'password']);
 
-        if (! $token = Auth::attempt($credentials)) {
+        if (!Auth::attempt($credentials)) {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-
-        return $this->respondWithToken($token);
+        $token = auth()->user()->createToken('assess_token');
+        return $this->respondWithToken($token->plainTextToken);
     }
 
      /**
@@ -112,7 +107,7 @@ class AuthController extends Controller
     public function respondWithToken($token)
     {
         return response()->json([
-            'access_token' => auth()->user()->is_actived===1 ? $token : null,
+            'access_token' => auth()->user()->status===1 ? $token : null,
             'role' => auth()->user()->role,
             'user' => auth()->user()->status===1 ? auth()->user()->name : null,
             'referral_code' => auth()->user()->referral_code,
