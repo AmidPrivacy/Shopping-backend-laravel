@@ -107,6 +107,7 @@ class OrderController extends Controller
                 array_push($relations, [
                     'order_id' => $order->id,
                     'product_id' => $product->id,
+                    'company_id' => $item->item_company_id,
                     'qty' => $item['item_quantity'],
                     'uuid' => Str::uuid()
                 ]);
