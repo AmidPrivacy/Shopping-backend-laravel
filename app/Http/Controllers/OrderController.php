@@ -116,6 +116,7 @@ class OrderController extends Controller
             $inserted = DB::table('order_items')->insert($relations);
 
             if($inserted) {
+                Cookie::queue(Cookie::forget('shopping_cart'));
                 return response()->json([
                     'data' => ["message"=>"Sifariş məlumatları sistemə əlavə olundu"],
                     'error' => null,
