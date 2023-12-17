@@ -20,5 +20,9 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function sellers()
+    {
+        return $this->hasMany(CompanyOrderItem::class, 'item_id');
+    }
 
 }

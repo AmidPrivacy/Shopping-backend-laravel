@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Jobs\OrderReceived;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -33,9 +35,9 @@ class OrderController extends Controller
 
     public function getById($id) {
 
-        $orderInfo = Order::find($id);
-
-        $orderInfo->items = DB::select("select * from order_items where is_deleted=0 and order_id=?", [$id]);
+        $orderInfo = Order::with(['items' => function($query) {
+            $query->with('sellers');
+        }])->find($id);
 
         return response()->json([
             'data' => $orderInfo,
@@ -98,24 +100,26 @@ class OrderController extends Controller
         if($order->save()) {
             $relations = [];
 
-            $cart_data = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', Cookie::get('shopping_cart')), true );
+            //$cart_data = json_decode( preg_replace('/[\x00-\x1F\x80-\xFF]/', '', Cookie::get('shopping_cart')), true );
 
-            // foreach ($request->items as $item)
-            foreach ($cart_data as $item)
+            foreach ($request->items as $item)
+            //foreach ($cart_data as $item)
             {
-                $product = Products::where('uuid', $item['item_id'])->first();
+                $product = Products::where('uuid', $item['id'])->first();
                 array_push($relations, [
                     'order_id' => $order->id,
                     'product_id' => $product->id,
-                    'company_id' => $item['item_company_id'],
-                    'qty' => $item['item_quantity'],
-                    'uuid' => Str::uuid()
+                    'company_id' => $item['company_id'],
+                    'qty' => $item['quantity'],
+                    'uuid' => (string)Str::uuid()
                 ]);
+
             }
 
             $inserted = DB::table('order_items')->insert($relations);
 
             if($inserted) {
+                dispatch(new OrderReceived($order));
                 Cookie::queue(Cookie::forget('shopping_cart'));
                 return response()->json([
                     'data' => ["message"=>"Sifariş məlumatları sistemə əlavə olundu"],

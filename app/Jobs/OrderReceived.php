@@ -41,23 +41,21 @@ class OrderReceived implements ShouldQueue
 
             $product = $order_item->product;
 
-            $available_company = Companies::whereHas('products', function($query) use($product) {
+            $company = Companies::with(['products' => function($query) use($product) {
                 $query->where('product_id', $product->id);
-            })->with(['products' => function($query) use($product) {
-                $query->where('product_id', $product->id);
-            }])->get()->first();
+            }])->find($order_item->company_id);
 
             for ($i=0; $i < $order_item->qty; $i++) {
                 $companyOrderItem = new CompanyOrderItem;
-                $companyOrderItem->company_id = $available_company->id;
+                $companyOrderItem->company_id = $company->id;
                 $companyOrderItem->order_id = $this->order->id;
                 $companyOrderItem->item_id = $order_item->id;
                 $companyOrderItem->product_id = $product->id;
-                $companyOrderItem->price = $available_company->products->first()->pivot->price;
+                $companyOrderItem->price = $company->products->first()->pivot->price;
                 $companyOrderItem->date = now();
                 $companyOrderItem->save();
             }
-            
+
         }
     }
 }

@@ -10,6 +10,7 @@ use  App\Models\Rows;
 use  App\Models\CategoryCompanyRelations;
 use App\Models\CompanyOrderItem;
 use  App\Models\ProductCompanyRelations;
+use App\Enums\CompanyOrderStatusEnum;
 use Illuminate\Support\Str;
 
 class CompanyController extends Controller
@@ -284,7 +285,6 @@ class CompanyController extends Controller
         $all = DB::select("select id from company_order_items where company_id = ".auth()->user()->company_id);
         $orders = DB::select("select * from company_order_items where company_id=".auth()->user()->company_id . $paging);
 
-
         return response()->json([
             'data' => ["orders"=>$orders, "totalCount"=>count($all)],
             'error' => null,
@@ -293,8 +293,21 @@ class CompanyController extends Controller
     }
 
     public function setOrderStatus(Request $request) {
+        $id = $request->input('id');
+        $companyOrderItem = CompanyOrderItem::find($id);
+        $companyOrderItem->status = $request->status;
+        $companyOrderItem->save();
         return response()->json([
             'data' => ["status"=> 'ok'],
+            'error' => null,
+        ]);
+    }
+
+
+    public function statuses() {
+        $data = array_map(fn($item) => $item->toHumanize(), CompanyOrderStatusEnum::cases());;
+        return response()->json([
+            'data' => $data,
             'error' => null,
         ]);
     }

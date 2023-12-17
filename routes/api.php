@@ -45,6 +45,7 @@ use App\Http\Controllers\SubscriberController;
         $router->post('user-profile', [AuthController::class, 'me']);
 
         $router->get('/company/orders', [CompanyController::class, 'orders']);
+        $router->get('/company/statuses', [CompanyController::class, 'statuses']);
         $router->post('/company/orders/set-status', [CompanyController::class, 'setOrderStatus']);
 
     });
