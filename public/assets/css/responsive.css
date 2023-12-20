@@ -100,6 +100,8 @@
     .product-name-and-breadcrumb .home-shop nav ul{
         margin: 0;
         padding-left: 3%;
+        position: relative;
+        z-index: 100;
     }
 
     .product-image-details .detail-custom-container {

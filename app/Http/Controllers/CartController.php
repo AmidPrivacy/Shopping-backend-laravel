@@ -90,7 +90,7 @@ class CartController extends Controller
                     'item_name' => $prod_name,
                     'item_quantity' => $quantity,
                     'item_company_id' => $company_id,
-                    'item_company_name' => $company->responsible_person,
+                    'item_company_name' => $responsible_person,
                     'item_price' => $priceval,
                     'item_image' => $prod_image
                 );

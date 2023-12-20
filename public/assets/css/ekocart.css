@@ -371,6 +371,7 @@ header nav ul li .under-menu-box .main-category-item>i {
 /* SECTION ONE */
 
 section.section-table {
+    clear: both;
     background-color: #f5f9fc;
 }
 
@@ -787,6 +788,11 @@ table td {
 .product-slider .addition-offers p {
     font-weight: 700;
     margin-top: 15px;
+}
+
+.product-slider .addition-offers img {
+    height: 400px;
+    object-fit: fill;
 }
 
 .product-name-and-breadcrumb>div {

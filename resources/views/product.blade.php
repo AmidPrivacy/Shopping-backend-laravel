@@ -11,7 +11,7 @@
                         <li><i class="fa-solid fa-house" id="home"></i></li>
                         <li><a href="/">Əsas səhifə</a></li>
                         @if($data->categoryName !==null)
-                            <li class="slash"><a href="/public/sub-categories/{{ $data->categoryId }}">{{ $data->categoryName }}</a></li>
+                            <li class="slash"><a href="/sub-categories/{{ $data->categoryId }}">{{ $data->categoryName }}</a></li>
                         @endif
                         <li class="slash"><a href="#" id="product-image-color">{{ $data->name }}</a></li>
                     </ul>
@@ -173,7 +173,7 @@
                 @foreach($data->others as $other)
                     @if(count($other->images)>0)
                     <div class="item">
-                        <a href="">
+                        <a href="/product/{{ $other->uuid }}">
                             <img src="/uploads/products/{{ $other->images[0]->name }}" alt="" >
                             <h3>{{ $other->name }}</h3>
                             <p>{{ $other->price }} AZN</p>
@@ -234,7 +234,7 @@
                 var product_id = $('.product-id').val();
                 var quantity = $(".product-num #product-count").val();
                 var company_id = $(".product-num .company-id").val();
-                var responsible_person = $(".product-num .company-name").val();
+                var responsible_person = $("#product-firms .company-name").text();
 
                 $(".cart-action-box button i").hide();
                 $(".cart-action-box button img").show();

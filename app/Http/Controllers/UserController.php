@@ -112,6 +112,13 @@ class UserController extends Controller
         $user->email  = $request->email ;
         $user->number = $request->phone;
         $user->address = $request->address;
+        $user->asan_center_id = $request->input('asan_center_id');
+        $user->company_id = $request->input('company_id');
+        if($request->input("password")) {
+            $user->password = app("hash")->make($request->input("password"));
+        } 
+        
+
         $user->role = $request->role;
 
         if($user->referral_code ===null && $user->role==4) {

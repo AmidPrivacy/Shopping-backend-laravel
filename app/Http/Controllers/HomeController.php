@@ -74,8 +74,8 @@ class HomeController extends Controller
         } 
 
       
-        return view('categories')->with(['category'=>null, "menus"=>$menus, "products"=>$products, 
-                    "isParent"=>false, "currentPage" =>($request->offset??0+1), "totalCount"=>count($all)]); 
+        return view('categories')->with(['category'=>null, "menus"=>$menus, "products"=>$products, "isCategory"=> false,
+                    "isParent"=>false,  "currentPage" =>($request->offset??0+1), "totalCount"=>count($all)]); 
     }
 
     public function getById($id)
@@ -125,7 +125,7 @@ class HomeController extends Controller
 
             $productInfo = $datas[0];
 
-            $productInfo->others = DB::select("select id, name, price  from products where is_deleted=0 and 
+            $productInfo->others = DB::select("select id, uuid, name, price  from products where is_deleted=0 and 
                                     category_id=? order by id desc limit 15", [$productInfo->categoryId]); 
 
             foreach($productInfo->others as $other) { 
@@ -194,7 +194,7 @@ class HomeController extends Controller
         } 
 
       
-        return view('categories')->with(['category'=>$menuInfo, "menus"=>$menus, "products"=>$products, 
+        return view('categories')->with(['category'=>$menuInfo, "menus"=>$menus, "products"=>$products, "isCategory"=> false, 
                     "isParent"=>false, "currentPage" =>($request->offset??0+1), "totalCount"=>count($all)]);  
     } 
 
@@ -237,8 +237,8 @@ class HomeController extends Controller
         } 
 
       
-        return view('categories')->with(['category'=>$categoryInfo, "menus"=>$menus, "products"=>$products, 
-                    "isParent"=>false, "currentPage" =>($request->offset??0+1), "totalCount"=>count($all)]); 
+        return view('categories')->with(['category'=>$categoryInfo, "menus"=>$menus, "products"=>$products, "isCategory"=> true,
+        "currentRange" => ($request->offset??0)." - ".($request->limit??(count($all)<10 ? count($all) : 10)), "isParent"=>false, "currentPage" =>($request->offset??0+1), "totalCount"=>count($all)]); 
     }
 
     public function parentCategories($id, Request $request)
@@ -300,7 +300,7 @@ class HomeController extends Controller
 
         
         return view('categories')->with(['category'=>$categoryInfo, "menus"=>$menus, "products"=>$products, "isParent"=>true,
-                "currentPage" =>($request->offset??0+1), "totalCount"=>count($all), "subcategories" => $subcategories,
+                "currentPage" =>($request->offset??0+1), "totalCount"=>count($all), "subcategories" => $subcategories, "isCategory"=> true,
                 "currentRange" => ($request->offset??0)." - ".($request->limit??(count($all)<10 ? count($all) : 10)), "types" => $types
                 ]); 
     }

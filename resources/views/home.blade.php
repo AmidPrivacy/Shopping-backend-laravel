@@ -13,15 +13,15 @@
                 <div class="carousel-item active" data-bs-interval="10000">
                     <img src="assets/img/banner-1.png" class="d-block w-100" alt="...">
                     <div class="carousel-caption d-md-block">
-                        <h3>First slide label</h3>
-                        <p>Some representative placeholder content for the first slide.</p> 
+                        <h3>Özəl anlarınızın başlanğıcı</h3>
+                        <p>Hər anınıza dəyər qatan cehiz məhsulları</p> 
                     </div>
                 </div>
                 <div class="carousel-item" data-bs-interval="2000">
                     <img src="assets/img/banner-2.png" class="d-block w-100" alt="...">
                     <div class="carousel-caption d-md-block">
-                        <h3>Second slide label</h3>
-                        <p>Some representative placeholder content for the first slide.</p>
+                        <h3>Səadətinizin memarı</h3>
+                        <p>Sizin üçün seçilmiş cehiz məhsulları</p>
                     </div>
                 </div> 
             </div>
@@ -37,7 +37,7 @@
  
     </section>
  
-    <!-- SECTION-PRODUCTS -->
+    <!-- SECTION-PRODUCTS --> 
     <section class="section-product">
         <div class="custom-container">
             <div class="text">
@@ -49,29 +49,31 @@
             <div class="product-box">
                 @foreach($bestSelling as $key => $product)
                     @if(count($product->images)>0)
-                    <div class="product-item">
-                        <img src="uploads/products/{{ $product->images[0]->name }}" alt="">
+                    <a href="/product/{{ $product->uuid }}">
+                        <div class="product-item">
+                            <img src="uploads/products/{{ $product->images[0]->name }}" alt="">
 
-                        <div class="card-body">
-                            <div class="product-info">
-                                <a href="/product/{{ $product->uuid }}">{{ $product->name }}</a>
-                            </div>
-                            <div class="intro">
-                                <span class="last-price"> 
-                                    {{ $product->price }} AZN
-                                </span>
-                                <div class="reyting">
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
-                                    <i class="fa-solid fa-star"></i>
+                            <div class="card-body">
+                                <div class="product-info">
+                                    <a href="/product/{{ $product->uuid }}"> {{ $product->name }}</a>
+                                </div>
+                                <div class="intro">
+                                    <span class="last-price"> 
+                                        {{ $product->price }} AZN
+                                    </span>
+                                    <div class="reyting">
+                                        <i class="fa-solid fa-star"></i>
+                                        <i class="fa-solid fa-star"></i>
+                                        <i class="fa-solid fa-star"></i>
+                                        <i class="fa-solid fa-star"></i>
+                                        <i class="fa-solid fa-star"></i>
+
+                                    </div>
 
                                 </div>
-
-                            </div>
+                            </div> 
                         </div> 
-                    </div> 
+                    </a>
                     @endif
                 @endforeach
             </div> 
@@ -91,26 +93,28 @@
                     <div class="product-box"> 
                         @foreach($populars as $key => $product)
                             @if(count($product->images)>0)
-                            <div class="product-item">
-                                <img src="uploads/products/{{ $product->images[0]->name }}" alt=""> 
-                                <div class="card-body">
-                                    <div class="product-info">
-                                        <a href="/product/{{ $product->uuid }}">{{ $product->name }}</a>
-                                    </div>
-                                    <div class="intro">
-                                        <span class="last-price"> 
-                                            {{ $product->price }} AZN
-                                        </span>
-                                        <div class="reyting">
-                                            <i class="fa-solid fa-star"></i>
-                                            <i class="fa-solid fa-star"></i>
-                                            <i class="fa-solid fa-star"></i>
-                                            <i class="fa-solid fa-star"></i>
-                                            <i class="fa-solid fa-star"></i> 
-                                        </div> 
-                                    </div>
+                            <a href="/product/{{ $product->uuid }}">
+                                <div class="product-item">
+                                    <img src="uploads/products/{{ $product->images[0]->name }}" alt=""> 
+                                    <div class="card-body">
+                                        <div class="product-info">
+                                            <a href="/product/{{ $product->uuid }}">{{ $product->name }}</a>
+                                        </div>
+                                        <div class="intro">
+                                            <span class="last-price"> 
+                                                {{ $product->price }} AZN
+                                            </span>
+                                            <div class="reyting">
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i>
+                                                <i class="fa-solid fa-star"></i> 
+                                            </div> 
+                                        </div>
+                                    </div> 
                                 </div> 
-                            </div> 
+                            </a>
                             @endif
                         @endforeach 
                     </div> 
@@ -137,8 +141,8 @@
         </div> 
     </section>
 
-        <!-- SECTION-TWO -->
-        <section class="section-page-two">
+    <!-- SECTION-TWO -->
+    <section class="section-page-two">
         <div class="custom-container">
             <div class="row">
                 <div class="col-md-3">

@@ -119,26 +119,28 @@
                              
                             <div class="product-box">
                             @foreach($products as $key => $product) 
-                                <div class="product-item">
-                                    <img src="/uploads/products/{{ count($product->images)>0 ? $product->images[0]->name : 'not-found.jpg' }}" alt=""> 
-                                    <div class="card-body">
-                                        <div class="product-info">
-                                            <a href="/product/{{ $product->uuid }}">{{ $product->name }}</a>
-                                        </div>
-                                        <div class="intro">
-                                            <span class="last-price"> 
-                                                {{ $product->price }} AZN
-                                            </span>
-                                            <div class="reyting">
-                                                <i class="fa-solid fa-star"></i>
-                                                <i class="fa-solid fa-star"></i>
-                                                <i class="fa-solid fa-star"></i>
-                                                <i class="fa-solid fa-star"></i>
-                                                <i class="fa-solid fa-star"></i> 
-                                            </div> 
-                                        </div>
+                                <a href="/product/{{ $product->uuid }}">
+                                    <div class="product-item">
+                                        <img src="/uploads/products/{{ count($product->images)>0 ? $product->images[0]->name : 'not-found.jpg' }}" alt=""> 
+                                        <div class="card-body">
+                                            <div class="product-info">
+                                                <a href="/product/{{ $product->uuid }}">{{ $product->name }}</a>
+                                            </div>
+                                            <div class="intro">
+                                                <span class="last-price"> 
+                                                    {{ $product->price }} AZN
+                                                </span>
+                                                <div class="reyting">
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
+                                                    <i class="fa-solid fa-star"></i> 
+                                                </div> 
+                                            </div>
+                                        </div> 
                                     </div> 
-                                </div> 
+                                </a>
                             @endforeach
                             </div>
                             @if($totalCount>10 && $isParent)
