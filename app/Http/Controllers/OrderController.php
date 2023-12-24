@@ -17,17 +17,10 @@ class OrderController extends Controller
 
     public function list(Request $request) {
 
-        $paging = "";
-
-        if(isset($request->limit) && isset($request->offset)) {
-            $paging = " LIMIT ".$request->limit." OFFSET ".$request->offset*10;
-        }
-
-        $all = DB::select("select id from orders where is_deleted=0");
-        $datas = DB::select("select * from orders where is_deleted=0".$paging);
+        $orders = Order::paginate(10);
 
         return response()->json([
-            'data' => ["orders"=>$datas, "totalCount"=>count($all)],
+            'data' => $orders,
             'error' => null,
         ]);
 
@@ -36,7 +29,7 @@ class OrderController extends Controller
     public function getById($id) {
 
         $orderInfo = Order::with(['items' => function($query) {
-            $query->with('sellers');
+            $query->with(['product', 'sellers']);
         }])->find($id);
 
         return response()->json([

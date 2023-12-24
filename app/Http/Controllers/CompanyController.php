@@ -276,17 +276,10 @@ class CompanyController extends Controller
 
     public function orders(Request $request) {
 
-        $paging = "";
-
-        if(isset($request->limit) && isset($request->offset)) {
-            $paging = " LIMIT ".$request->limit." OFFSET ".$request->offset*10;
-        }
-
-        $all = DB::select("select id from company_order_items where company_id = ".auth()->user()->company_id);
-        $orders = DB::select("select * from company_order_items where company_id=".auth()->user()->company_id . $paging);
+        $orders = CompanyOrderItem::with(['order', 'product'])->where('company_id', auth()->user()->company_id)->paginate(10);
 
         return response()->json([
-            'data' => ["orders"=>$orders, "totalCount"=>count($all)],
+            'data' => $orders,
             'error' => null,
         ]);
 
